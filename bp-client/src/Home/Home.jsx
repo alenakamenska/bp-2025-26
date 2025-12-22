@@ -1,6 +1,9 @@
 import React from "react";
 import image from "../images/main.jpg";
+import img from "../images/oprava.jpg"
 import "./home.css";
+import Card from "../components/Card/card"
+import Warning from "../components/Warning/warning"
 
 export const Home = () => {
   const welcomeMessage = "Vítej na hlavní stránce!";
@@ -13,13 +16,16 @@ export const Home = () => {
         <h1>Vítejte v portále pro zahradnictví a květinářství</h1>
       </div>
       <div>
-        <h2 className="danger">Výstrahy</h2>
-        <div className="container">
-            <p>Přikryjte rajčata teplota v následujících hodinách klesne pod 6°C</p>
-        </div>
+        <Warning />
       </div>
-      <div>
+      <div className="container">
         <h2>Naše zahradnictví</h2>
+        <div className="busines">
+          <Card image={image} name="zahradnictví Raspenava" address="Raspenava" openingHours="Po-So: 10-17"/>
+          <Card image={img} name="zahradnictví Raspenava" address="Raspenava" openingHours="Po-So: 10-17"/>
+          <Card image={image} name="zahradnictví Raspenava" address="Raspenava" openingHours="Po-So: 10-17"/>
+          <Card image={img} name="zahradnictví Raspenava" address="Raspenava" openingHours="Po-So: 10-17"/>
+        </div>
       </div>
     </div>
   );

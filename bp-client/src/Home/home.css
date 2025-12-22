@@ -1,3 +1,7 @@
+html, body {
+  overflow-x: hidden;
+}
+
 .banner {
     position: relative;        
     width: 100%;               
@@ -28,25 +32,21 @@
   
   h2 {
     text-align: center;
-    font-size: 40px;
+    font-size: 60px;
     color: var(--primary-color);
-  }
-  
-  .danger{
-    color: var(--secondary-color);
   }
 
   .container{
-    padding: 1rem 1.5rem;
-    border-radius: 8px;
-    margin: 1rem 0;
-    font-weight: bold;
-    max-width: 600px;
-    background-color: var(--text-color);
-    border: 1px solid #ffb74d;
-    margin-left: 200px;
-}
-
+    margin-left: 10%;
+    margin-right: 10%;
+  }
+  .busines{
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+    padding: 5px;
+    gap: 20px;
+  }
+  
   @media (max-width: 768px) {
     h1{
         font-size: 40px;
@@ -54,5 +54,33 @@
     .banner{
         height: 500px;
     }
+    .busines{
+      display: grid;
+      grid-template-columns: auto auto;
+      padding: 5px;
+      gap: 20px;
+    }
+    body{
+      width: 100%;
+    }
   }
-  
+  @media (max-width: 480px) {
+    h1{
+        font-size: 40px;
+    }
+    h2{
+      font-size: 30px;
+    }
+    .banner{
+        height: 500px;
+    }
+    .busines{
+      display: grid;
+      grid-template-columns: auto;
+      padding: 5px;
+      gap: 20px;
+    }
+    body{
+      width: 100%;
+    }
+  }

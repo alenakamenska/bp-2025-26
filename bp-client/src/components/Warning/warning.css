@@ -1,0 +1,17 @@
+.warning {
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    margin: 3rem auto;        
+    font-weight: bold;
+    max-width: 800px;
+    width: 90%;               
+    background-color: var(--warning-color);
+    border: 3px solid var(--secondary-color);
+    box-sizing: border-box;
+    text-align: center;       
+  }
+
+  pre{
+    font-size: 20px;
+    white-space: pre-wrap;
+  }

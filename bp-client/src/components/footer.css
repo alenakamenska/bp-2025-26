@@ -1,0 +1,17 @@
+footer.footer {
+    background-color: var(--primary-color);
+    color: var(--background-color);
+    text-align: center;
+    padding: 15px 10px;
+    margin-top: 10%;
+}
+    
+footer.footer a {
+    text-decoration: none;
+    margin: 0 8px;
+    color:var(--background-color);
+}
+    
+footer.footer a:hover {
+    text-decoration: underline;
+}

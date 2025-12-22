@@ -3,6 +3,7 @@ import { useState } from "react";
 import icon from "../images/icon.png";
 import "./layout.css";
 import { IoMenu } from "react-icons/io5";
+import { Footer } from "./footer";
 
 export const FrontLayout = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -24,6 +25,7 @@ export const FrontLayout = () => {
       <main className="main-content">
         <Outlet />
       </main>
+      <Footer />
     </>
   );
 };
