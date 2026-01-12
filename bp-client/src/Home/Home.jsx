@@ -6,8 +6,7 @@ import Card from "../components/Card/card"
 import Warning from "../components/Warning/warning"
 
 export const Home = () => {
-  const welcomeMessage = "Vítej na hlavní stránce!";
-  return (
+    return (
     <div>
       <div className="banner">
         <img src={image} alt="Banner" className="banner-image" />

@@ -37,6 +37,13 @@
     cursor: pointer;
   }
   
+  .nav-icons {
+    margin-left: auto; 
+    display: flex;
+    gap: 15px; 
+    align-items: center;
+  }
+
   @media (max-width: 768px) {
     .hamburger {
       display: block; 

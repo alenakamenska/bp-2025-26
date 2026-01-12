@@ -1,0 +1,29 @@
+.logout-container {
+  height: 100vh;
+  width: 100vw;
+  background-image: url('../images/form1.png'); 
+  background-size: cover;
+  background-repeat: no-repeat;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-position: center;
+}
+
+.logout{
+  color: var(--secondary-color);
+}
+
+.jumbotron{
+  background: var(--background-color);
+  opacity: 60%;
+  padding: 60px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
