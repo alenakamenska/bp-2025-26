@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios"; 
 import { useAuthContext, SET_ACCESS_TOKEN } from "../Providers/AuthProvider"; 
 import { Input } from "../components/Input/Input";
+import {Button} from "../components/Button/Button"
 
 export const Login = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
@@ -46,7 +47,7 @@ export const Login = () => {
                   {...register("password", { required: "Heslo je povinné" })}
                   placeholder="zadejte heslo..."
               />
-              <button type="submit">Přihlásit se</button>
+              <Button variant="primary" type="submit" text="Přihlásit se"/>
             </form>
         </div>
     );

@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import "../Card/card.css";
+import {Button} from "../Button/Button"
 
 export default function Card({ image, name, address, openingHours }) {
   return (
@@ -13,7 +14,7 @@ export default function Card({ image, name, address, openingHours }) {
         <h3 className="card-title">{name}</h3>
         <p className="card-address">{address}</p>
         <p className="card-hours">{openingHours}</p>
-        <button className="butt">více</button>
+        <Button text="více" variant="wheat"/>
       </div>
     </div>
   );

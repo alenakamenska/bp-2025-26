@@ -6,6 +6,8 @@ import axios from "axios";
 import { useAuthContext, SET_ACCESS_TOKEN } from "../Providers/AuthProvider"; 
 import { Input } from "../components/Input/Input";
 import {Select} from "../components/Select/Select"
+import {Button} from "../components/Button/Button"
+
 
 export const Register = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
@@ -59,7 +61,7 @@ export const Register = () => {
                   options={roleOptions}
                   {...register("role", { required: "Role je povinná" })}
               />
-              <button type="submit">Přihlásit se</button>
+                <Button variant="primary" type="submit" text="Přihlásit se"/>
             </form>
         </div>
     );
