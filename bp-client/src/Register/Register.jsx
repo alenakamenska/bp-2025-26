@@ -15,10 +15,10 @@ export const Register = () => {
     const [, dispatch] = useAuthContext();
     const roleOptions = [
         { value: "User", label: "Zákazník" },
-        { value: "Manager", label: "Zahradnictví/Květinářství" }
+        { value: "Business", label: "Zahradnictví/Květinářství" }
     ];
     const onSubmit = data => {
-        axios.post("https://localhost:7149/api/Auth/Register", {
+        axios.post("https://localhost:7014/api/Auth/Register", {
             email: data.email, 
             password: data.password,
             role: data.role
@@ -61,7 +61,7 @@ export const Register = () => {
                   options={roleOptions}
                   {...register("role", { required: "Role je povinná" })}
               />
-                <Button variant="primary" type="submit" text="Přihlásit se"/>
+                <Button variant="primary" type="submit" text="Registrovat se"/>
             </form>
         </div>
     );

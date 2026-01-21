@@ -4,6 +4,7 @@
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s;
+  font-weight: bold;
 }
 
 .btn-primary {
@@ -18,7 +19,7 @@
 
 .btn-white {
   background-color: var(--background-color);
-  color: white;
+  color: var(--primary-color);
 }
 
 .btn-wheat {

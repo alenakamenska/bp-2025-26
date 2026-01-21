@@ -12,7 +12,7 @@ export const Login = () => {
     const navigate = useNavigate();
     const [, dispatch] = useAuthContext();
     const onSubmit = data => {
-        axios.post("https://localhost:7149/api/Auth/Login", {
+        axios.post("https://localhost:7014/api/Auth/Login", {
             email: data.email, 
             password: data.password
         })

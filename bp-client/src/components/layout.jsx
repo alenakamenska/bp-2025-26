@@ -11,9 +11,9 @@ import { useAuthContext } from "../Providers/AuthProvider";
 export const FrontLayout = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [state, dispatch] = useAuthContext();  
-  const userRole = state.profile?.["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
   const isLoggedIn = !!state.accessToken;  
   const navigate = useNavigate();
+
   const handleAuthAction = () => {
     if (isLoggedIn) {
       dispatch({ type: "CLEAR_ACCESS_TOKEN" }); 
@@ -25,7 +25,7 @@ export const FrontLayout = () => {
   };
 
   return (
-    <>
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <nav className="navbar">
         <img src={icon} alt="Logo" className="icon" />
         
@@ -41,21 +41,21 @@ export const FrontLayout = () => {
         </ul>
         <div className="nav-icons">
           <IconButton 
-          icon={isLoggedIn ? CiLogout : CiLogin} 
-          color="#fff" 
-          onClick={handleAuthAction}
-        />
-        <IconButton 
-          icon={CiUser} 
-          color="#fff" 
-          onClick={() => navigate("/register")}        
+            icon={isLoggedIn ? CiLogout : CiLogin} 
+            color="#fff" 
+            onClick={handleAuthAction}
+          />
+          <IconButton 
+            icon={CiUser} 
+            color="#fff" 
+            onClick={() => navigate("/register")}         
           />
         </div>
       </nav>
-      <main className="main-content">
+      <main className="main-content" style={{ flex: 1 }}>
         <Outlet />
       </main>
       <Footer />
-    </>
+    </div>
   );
 };

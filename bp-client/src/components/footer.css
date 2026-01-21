@@ -3,6 +3,9 @@ footer.footer {
     color: var(--background-color);
     text-align: center;
     padding: 15px 10px;
+    position: relative;
+    clear: both;
+    margin-top: auto;
 }
     
 footer.footer a {
