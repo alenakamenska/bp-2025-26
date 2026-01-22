@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios"; 
 import { useAuthContext } from "../Providers/AuthProvider";
 import { Button } from "../components/Button/Button";
+import { FaCircleArrowRight, FaCircleArrowLeft } from "react-icons/fa6";
 
 export const TipDetail = () => {
   const { id } = useParams(); 
@@ -38,7 +39,7 @@ export const TipDetail = () => {
   return (
         <div className="tip-container">
             <div className="arrow">
-                <Button variant="white" text="<-" onClick={() => navigate(`/rady/${Number(id) + 1}`)} />
+                <Button variant="white" text={<FaCircleArrowLeft size="2em"/>} onClick={() => navigate(`/rady/${Number(id) + 1}`)} />
             </div>
             <div className="tip">
                 <h1>{tip.name}</h1>
@@ -51,7 +52,7 @@ export const TipDetail = () => {
                 </div>
             </div>
             <div className="arrow">
-                <Button variant="white" onClick={() => navigate(`/rady/${Number(id) + 1}`)} text="->" />
+                <Button variant="white" onClick={() => navigate(`/rady/${Number(id) + 1}`)} text={<FaCircleArrowRight size="2em"/>} />
             </div>
         </div>
     );

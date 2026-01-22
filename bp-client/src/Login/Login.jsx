@@ -21,7 +21,7 @@ export const Login = () => {
           if (token) {
             localStorage.setItem("token", token);
             dispatch({ type: SET_ACCESS_TOKEN, payload: token });
-            navigate("/");
+            navigate("/uzivatel");
             }
         })
         .catch(error => {

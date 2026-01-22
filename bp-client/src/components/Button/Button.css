@@ -25,3 +25,8 @@
 .btn-wheat {
   background-color: var(--text-color);
 }
+
+.btn-danger{
+    background-color: var(--danger-color);
+    color:bisque
+}

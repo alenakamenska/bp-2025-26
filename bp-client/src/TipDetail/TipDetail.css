@@ -61,6 +61,7 @@
   font-size: 1.2rem;
   color: var(--primary-color);
   width: 100%;
+  text-align: left;
 }
 
 @media (max-width: 768px) {

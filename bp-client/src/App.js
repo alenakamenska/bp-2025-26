@@ -8,6 +8,7 @@ import {Register} from "./Register/Register"
 import { Tips } from "./Tips/Tips";
 import { AddTip } from "./Add-Tip/Add-tip";
 import { TipDetail } from "./TipDetail/TipDetal";
+import {UserPage} from "./UserPage/UserPage"
 
 function App() {
   return (
@@ -15,6 +16,9 @@ function App() {
       <Routes>
         <Route path="/" element={<FrontLayout />}>
           <Route index element={<Home />} />
+        </Route>
+        <Route path="/uzivatel" element={<FrontLayout />}>
+          <Route index element={<UserPage />} />
         </Route>
         <Route path="/rady/:id" element={<FrontLayout />} >
             <Route index element={<TipDetail/>}/>

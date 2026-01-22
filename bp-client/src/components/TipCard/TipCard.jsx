@@ -19,14 +19,10 @@ export const TipCard = ({ tip, userId, onDelete }) => {
       </div>
       
       <div className="tip-card-footer">
-        {tip.category ? (
-          <span className="category-badge">{tip.category.name}</span>
-        ) : (
-          <span className="category-badge general">Obecné</span>
-        )}
-        <Button text="více" variant="wheat" onClick={handleDetailClick}/>
+        
+        <Button text="více" variant="primary" onClick={handleDetailClick}/>
         {tip.userId === userId && ( 
-            <Button text="smazat" variant="secondary" onClick={handleDelete}/>
+            <Button text="smazat" variant="danger" onClick={handleDelete}/>
         )}
         </div>
     </div>
