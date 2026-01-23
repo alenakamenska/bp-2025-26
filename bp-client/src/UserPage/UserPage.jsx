@@ -4,6 +4,7 @@ import { useAuthContext } from "../Providers/AuthProvider";
 import { Input } from "../components/Input/Input";
 import { Button } from "../components/Button/Button";
 import { CiUser, CiLock, CiViewList, CiLogout } from "react-icons/ci";
+import { MyBusiness } from "../MyBusinesses/MyBusinesses";
 
 export const UserPage = () => {
   const [activeTab, setActiveTab] = useState("profile");
@@ -37,7 +38,7 @@ export const UserPage = () => {
 
       <main className="user-content">
         {activeTab === "profile" && <h1>Nastavení profilu</h1>}
-        {activeTab === "orders" && <h1>Moje </h1>}
+        {activeTab === "orders" && <MyBusiness/>}
         {activeTab === "security" && <h1>Změna hesla</h1>}
       </main>
     </div>

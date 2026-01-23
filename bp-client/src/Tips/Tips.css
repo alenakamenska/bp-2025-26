@@ -4,7 +4,7 @@
 }
 
 .tips-hero {
-    height: 350px;
+    height: 500px;
     background-size: cover;
     background-position: center;
     position: relative;
@@ -16,7 +16,6 @@
 }
 
 .hero-overlay {
-    background: rgba(26, 42, 26, 0.45); 
     width: 100%;
     height: 100%;
     display: flex;

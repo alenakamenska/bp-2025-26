@@ -1,7 +1,7 @@
 .tip-card {
   background: var(--background-color);
   border-radius: 15px;
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 8px 10px rgba(0, 0, 0, 0.5);
   display: flex;
   height: 100%; 
   transition: all 0.3s ease;
@@ -34,17 +34,28 @@
   overflow: hidden;
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 5;
-  line-clamp: 5;
+  -webkit-line-clamp: 8;
+  line-clamp: 8;
 }
 
 .tip-card-footer {
-  padding: 15px 24px;
-  background: var(--background-color);
-  border-top: 1px solid #f0f0f0;
+  padding: 20px 24px;
+  background: rgba(0, 0, 0, 0.02); 
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
   display: flex;
-  justify-content: space-between;
-  border-radius: 15px;
+  gap: 12px; 
+  justify-content: center; 
+}
+
+.tip-card-footer button {
+  flex: 1; 
+  padding: 10px 0;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  border: none;
+  text-align: center;
 }
 
 .category-badge {

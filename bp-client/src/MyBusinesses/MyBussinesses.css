@@ -1,0 +1,78 @@
+.business-flex-form {
+    display: flex;
+    flex-direction: row;
+    gap: 50px;           
+    justify-content: center;
+    align-items: flex-start;
+    padding: 20px;
+    max-width: 1000px;
+    margin: 0 auto;  
+    box-shadow: 0 5px 5px 2px rgba(76, 89, 40, 0.2);
+    border-radius: 15px;
+}
+
+.form-column {
+    flex: 1;             
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+@media (max-width: 768px) {
+    .business-flex-form {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+.opening-hours-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: white; 
+    opacity: 0.8;
+    padding: 10px 15px;
+    margin-bottom: 8px;
+    border-radius: 12px;
+    border: 1px solid rgba(76, 89, 40, 0.1); 
+    transition: transform 0.2s ease;
+}
+
+.opening-hours-row:hover {
+    transform: translateX(5px);
+}
+
+.day-label {
+    font-weight: 600;
+    color: var(--primary-color);
+    width: 90px;
+}
+
+.time-input {
+    border: 1px solid var(--primary-color);
+    border-radius: 6px;
+    padding: 5px 8px;
+    background-color: #fff;
+    color: var(--primary-color);
+    font-family: inherit;
+    cursor: pointer;
+    outline: none;
+}
+
+.time-input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(76, 89, 40, 0.1);
+}
+
+.time-separator {
+    color: var(--primary-color);
+    font-size: 0.9em;
+    font-style: italic;
+}
+
+.businesses-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    padding: 20px;
+}
