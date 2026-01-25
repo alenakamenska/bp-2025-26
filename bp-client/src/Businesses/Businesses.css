@@ -1,0 +1,94 @@
+.business-page-wrapper {
+    display: flex;
+    min-height: 100vh;
+    background-color: var(--background-color);
+}
+
+.business-sidebar {
+    width: 300px;
+    background-color: var(--primary-color);
+    color: var(--background-color);
+    padding: 40px 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    box-shadow: 4px 0 10px rgba(0,0,0,0.1);
+}
+
+.sidebar-section h3 {
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+    color: var(--text-color); 
+}
+
+.search-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search-icon {
+    position: absolute;
+    left: 10px;
+    color: var(--primary-color);
+    font-size: 1.2rem;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 10px 10px 10px 35px;
+    border-radius: 8px;
+    border: none;
+    background-color: var(--background-color);
+    color: var(--primary-color);
+    outline: none;
+}
+
+.placeholder-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.filter-item-disabled {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.5);
+    padding: 10px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: not-allowed;
+}
+
+.hint-text {
+    font-size: 0.8rem;
+    opacity: 0.6;
+    margin-top: 5px;
+}
+
+.business-main-content {
+    flex-grow: 1;
+    padding: 40px;
+}
+
+.page-title {
+    margin-bottom: 30px;
+}
+
+.businesses-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 25px;
+}
+
+@media (max-width: 900px) {
+    .business-page-wrapper {
+        flex-direction: column;
+    }
+    .business-sidebar {
+        width: 100%;
+        padding: 20px;
+    }
+}

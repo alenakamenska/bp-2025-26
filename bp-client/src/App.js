@@ -9,6 +9,7 @@ import { Tips } from "./Tips/Tips";
 import { AddTip } from "./Add-Tip/Add-tip";
 import { TipDetail } from "./TipDetail/TipDetal";
 import {UserPage} from "./UserPage/UserPage"
+import { Business } from "./Businesses/Businesses";
 
 function App() {
   return (
@@ -39,6 +40,9 @@ function App() {
         </Route>
         <Route path="/pridat-radu" element={<FrontLayout />}>
           <Route index element={<AddTip/>} />
+        </Route>
+        <Route path="/podniky" element={<FrontLayout />}>
+          <Route index element={<Business/>} />
         </Route>
       </Routes>
     </BrowserRouter>

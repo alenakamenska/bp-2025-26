@@ -13,16 +13,21 @@ export const MyBusiness = () => {
     const [businesses, setBusinesses] = useState([]);
     const navigate = useNavigate();
     const [state] = useAuthContext(); 
-    const userId = state.profile?.sub || state.profile?.nameid;
+    const userId = state.profile?.["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"] 
+                   || state.profile?.["http://schemas.microsoft.com/ws/2008/06/identity/claims/nameidentifier"]
+                   || state.profile?.sub
+                   || state.profile?.nameid;    
     const [openningHours, setopenningHours] = useState([]);
 
     useEffect(() => {
-        axios.get("https://localhost:7014/api/Businesses")
+        axios.get(`https://localhost:7014/api/Businesses/user/${userId}`, {
+            headers: { Authorization: `Bearer ${state.accessToken}` }
+        })
         .then(response => {
             setBusinesses(response.data);
         })
         .catch(err => console.error("Chyba při načítání:", err));
-    }, []);
+    }, [userId, state.accessToken]);
     useEffect(() => {
         axios.get("https://localhost:7014/api/OpeningHours")
         .then(response => {
@@ -47,15 +52,14 @@ export const MyBusiness = () => {
         control,
         name: "openingHours"
     });
-    const onSubmit = async (data) => {    
+   const onSubmit = async (data) => {    
     const businessPayload = {
         name: data.name,
-        info: data.info,
         city: data.city,
         street: data.street,
         houseNumber: data.houseNumber,
         imageURL: data.imageURL,
-        userId: userId 
+        info: data.info
     };
 
     try {
@@ -64,7 +68,9 @@ export const MyBusiness = () => {
             businessPayload, 
             { headers: { Authorization: `Bearer ${state.accessToken}` } }
         );
+
         const newBusinessId = businessResponse.data.id;
+
         const hoursPromises = data.openingHours.map(hour => {
             return axios.post("https://localhost:7014/api/OpeningHours", {
                 day: hour.day,
@@ -75,15 +81,15 @@ export const MyBusiness = () => {
                 headers: { Authorization: `Bearer ${state.accessToken}` }
             });
         });
+
         await Promise.all(hoursPromises);
         navigate("/podniky");
     } catch (error) {
         console.error("Chyba při ukládání:", error.response?.data || error.message);
     }
 };
-
 return (
-    <div className="business-page-wrapper">
+    <div className="business-page">
         <h2>Moje podniky</h2>
         <div className="businesses-grid">
         {businesses.map((b) => (

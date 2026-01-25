@@ -20,8 +20,7 @@ export const AddTip = () => {
     
     const payload = {
         name: data.name,
-        info: data.info,
-        userId: userId 
+        info: data.info    
     };
 
     axios.post("https://localhost:7014/api/Tips", payload, {
