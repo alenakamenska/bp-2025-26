@@ -100,6 +100,7 @@ return (
             street={b.street}
             houseNumber={b.houseNumber}
             city={b.city}
+            id = {b.id}
             />
         ))}
         </div>

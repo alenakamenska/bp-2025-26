@@ -12,7 +12,7 @@ export const UserPage = () => {
 
   const menuItems = [
     { id: "profile", label: "Profil", icon: <CiUser /> },
-    { id: "orders", label: "Moje podniky", icon: <CiViewList /> },
+    { id: "business", label: "Moje podniky", icon: <CiViewList /> },
     { id: "security", label: "Změna hesla", icon: <CiLock /> },
   ];
 
@@ -38,7 +38,7 @@ export const UserPage = () => {
 
       <main className="user-content">
         {activeTab === "profile" && <h1>Nastavení profilu</h1>}
-        {activeTab === "orders" && <MyBusiness/>}
+        {activeTab === "business" && <MyBusiness/>}
         {activeTab === "security" && <h1>Změna hesla</h1>}
       </main>
     </div>

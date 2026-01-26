@@ -10,6 +10,7 @@ import { AddTip } from "./Add-Tip/Add-tip";
 import { TipDetail } from "./TipDetail/TipDetal";
 import {UserPage} from "./UserPage/UserPage"
 import { Business } from "./Businesses/Businesses";
+import { BusinessDetail } from "./BusinessDetail/BusinessDetail";
 
 function App() {
   return (
@@ -43,6 +44,9 @@ function App() {
         </Route>
         <Route path="/podniky" element={<FrontLayout />}>
           <Route index element={<Business/>} />
+        </Route>
+         <Route path="/podnik/:id" element={<FrontLayout />}>
+          <Route index element={<BusinessDetail/>} />
         </Route>
       </Routes>
     </BrowserRouter>

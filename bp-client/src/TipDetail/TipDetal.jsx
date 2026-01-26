@@ -30,11 +30,11 @@ export const TipDetail = () => {
     };
 
     if (id) fetchTip();
-  }, [id]); 
+    }, [id]); 
 
-  if (loading) return <p className="status-message">Načítám detail...</p>;
-  if (error) return <p className="status-message" style={{ color: 'red' }}>{error}</p>;
-  if (!tip) return <p className="status-message">Rada nebyla nalezena.</p>;
+    if (loading) return <p className="status-message">Načítám detail...</p>;
+    if (error) return <p className="status-message" style={{ color: 'red' }}>{error}</p>;
+    if (!tip) return <p className="status-message">Rada nebyla nalezena.</p>;
 
   return (
         <div className="tip-container">

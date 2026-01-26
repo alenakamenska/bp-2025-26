@@ -58,6 +58,7 @@ export const Business = () => {
                                 street={b.street}
                                 houseNumber={b.houseNumber}
                                 city={b.city}
+                                id = {b.id}
                             />
                         ))
                     }

@@ -2,11 +2,18 @@ import React from "react";
 import PropTypes from "prop-types";
 import "../Card/card.css";
 import { Button } from "../Button/Button";
+import { useNavigate } from "react-router-dom";
 
-export default function Card({ image, name, street, houseNumber, city }) {
+export default function Card({ id, image, name, street, houseNumber, city }) {
+  const navigate = useNavigate(); 
+
   const fullAddress = street && houseNumber 
-    ? `${street} ${houseNumber} ${city}` 
+    ? `${street} ${houseNumber}, ${city}` 
     : "Adresa není uvedena";
+
+  const handleDetailClick = () => {
+    navigate(`/podnik/${id}`); 
+  };
 
   return (
     <div className="card">
@@ -17,7 +24,7 @@ export default function Card({ image, name, street, houseNumber, city }) {
         <h3 className="card-title">{name}</h3>
         <p className="card-address">{fullAddress}</p>
         <div>
-            <Button text="více" variant="wheat" />
+          <Button text="více" variant="wheat" onClick={handleDetailClick} />
         </div>
       </div>
     </div>
@@ -25,16 +32,17 @@ export default function Card({ image, name, street, houseNumber, city }) {
 }
 
 Card.propTypes = {
+  id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired, 
   image: PropTypes.string,
   name: PropTypes.string.isRequired,
   street: PropTypes.string,
-  houseNumber: PropTypes.string,
-  openingHours: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
+  houseNumber: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  city: PropTypes.string,
 };
 
 Card.defaultProps = {
   image: undefined,
   street: "",
   houseNumber: "",
-  openingHours: "Otevírací doba není k dispozici",
+  city: "",
 };
