@@ -11,6 +11,8 @@ import { TipDetail } from "./TipDetail/TipDetal";
 import {UserPage} from "./UserPage/UserPage"
 import { Business } from "./Businesses/Businesses";
 import { BusinessDetail } from "./BusinessDetail/BusinessDetail";
+import { Products } from "./Products/Products";
+import { BusinessSettings } from "./BusinessSettings/BusinessSettings";
 
 function App() {
   return (
@@ -26,6 +28,7 @@ function App() {
             <Route index element={<TipDetail/>}/>
         </Route>
         <Route path="/sortiment" element={<FrontLayout />}>
+            <Route index element={<Products/>}/>
         </Route>
         <Route path="/login" element={<FrontLayout />}>
           <Route index element={<Login />} />
@@ -47,6 +50,9 @@ function App() {
         </Route>
          <Route path="/podnik/:id" element={<FrontLayout />}>
           <Route index element={<BusinessDetail/>} />
+        </Route>
+        <Route path="/sprava-podniku/:id" element={<FrontLayout />}>
+          <Route index element={<BusinessSettings/>} />
         </Route>
       </Routes>
     </BrowserRouter>

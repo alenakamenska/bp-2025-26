@@ -1,18 +1,20 @@
 import React, { useState } from "react";
 import "./UserPage.css";
 import { useAuthContext } from "../Providers/AuthProvider";
-import { Input } from "../components/Input/Input";
-import { Button } from "../components/Button/Button";
 import { CiUser, CiLock, CiViewList, CiLogout } from "react-icons/ci";
 import { MyBusiness } from "../MyBusinesses/MyBusinesses";
 
 export const UserPage = () => {
   const [activeTab, setActiveTab] = useState("profile");
-  const { logout } = useAuthContext(); 
+  const [state] = useAuthContext(); 
 
+  const userRole = state.profile?.["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"] 
+                   || state.profile?.role;
+
+  const isBusiness = userRole === "Business";
   const menuItems = [
     { id: "profile", label: "Profil", icon: <CiUser /> },
-    { id: "business", label: "Moje podniky", icon: <CiViewList /> },
+    ...(isBusiness ? [{ id: "business", label: "Moje podniky", icon: <CiViewList /> }] : []),
     { id: "security", label: "Změna hesla", icon: <CiLock /> },
   ];
 
@@ -38,7 +40,7 @@ export const UserPage = () => {
 
       <main className="user-content">
         {activeTab === "profile" && <h1>Nastavení profilu</h1>}
-        {activeTab === "business" && <MyBusiness/>}
+        {activeTab === "business" && isBusiness && <MyBusiness />}
         {activeTab === "security" && <h1>Změna hesla</h1>}
       </main>
     </div>

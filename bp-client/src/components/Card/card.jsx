@@ -4,7 +4,7 @@ import "../Card/card.css";
 import { Button } from "../Button/Button";
 import { useNavigate } from "react-router-dom";
 
-export default function Card({ id, image, name, street, houseNumber, city }) {
+export default function Card({ id, image, name, street, houseNumber, city, role }) {
   const navigate = useNavigate(); 
 
   const fullAddress = street && houseNumber 
