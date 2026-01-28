@@ -4,7 +4,7 @@ import "../Card/card.css";
 import { Button } from "../Button/Button";
 import { useNavigate } from "react-router-dom";
 
-export default function Card({ id, image, name, street, houseNumber, city, role }) {
+export default function Card({ id, image, name, street, houseNumber, city, owner }) {
   const navigate = useNavigate(); 
 
   const fullAddress = street && houseNumber 
@@ -23,8 +23,15 @@ export default function Card({ id, image, name, street, houseNumber, city, role 
       <div className="card-body">
         <h3 className="card-title">{name}</h3>
         <p className="card-address">{fullAddress}</p>
-        <div>
+        <div className="card-actions">
           <Button text="více" variant="wheat" onClick={handleDetailClick} />
+          {owner && (
+            <Button 
+              text="spravovat" 
+              variant="wheat" 
+              onClick={() => navigate(`/sprava-podniku/${id}`)} 
+            />
+          )}
         </div>
       </div>
     </div>

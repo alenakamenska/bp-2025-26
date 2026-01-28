@@ -18,7 +18,6 @@ export const MyBusiness = () => {
                    || state.profile?.sub
                    || state.profile?.nameid;    
     const [openningHours, setopenningHours] = useState([]);
-
     useEffect(() => {
         axios.get(`https://localhost:7014/api/Businesses/user/${userId}`, {
             headers: { Authorization: `Bearer ${state.accessToken}` }
@@ -101,6 +100,7 @@ return (
             houseNumber={b.houseNumber}
             city={b.city}
             id = {b.id}
+            owner={true}            
             />
         ))}
         </div>

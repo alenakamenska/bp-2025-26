@@ -5,7 +5,7 @@ import "./layout.css";
 import { IoMenu } from "react-icons/io5";
 import { Footer } from "./footer";
 import IconButton from "./iconButton"; 
-import { CiLogin, CiLogout, CiUser } from "react-icons/ci";
+import { CiCircleInfo, CiLogin, CiLogout, CiUser } from "react-icons/ci";
 import { useAuthContext } from "../Providers/AuthProvider";
 
 export const FrontLayout = () => {
@@ -46,9 +46,9 @@ export const FrontLayout = () => {
             onClick={handleAuthAction}
           />
           <IconButton 
-            icon={CiUser} 
+            icon={isLoggedIn ? CiCircleInfo : CiUser} 
             color="#fff" 
-            onClick={() => navigate("/register")}         
+            onClick={() => {isLoggedIn ? navigate("/uzivatel") : navigate("/register")}}         
           />
         </div>
       </nav>
