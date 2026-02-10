@@ -7,10 +7,10 @@ import ProductCard from "../components/ProductCard/ProductCard";
 export const BusinessDetail = () => {
   const [business, setBusiness] = useState(null);
   const [products, setProducts] = useState([]); 
+  const [openingHours, setOpeningHours] = useState([])
   const { id } = useParams(); 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
   const days = [
     { key: 'pondeli', label: 'Pondělí' },
     { key: 'utery', label: 'Úterý' },
@@ -29,6 +29,13 @@ export const BusinessDetail = () => {
         setBusiness(bizRes.data);
         const prodRes = await axios.get(`https://localhost:7014/api/Products/business/${id}`);
         setProducts(prodRes.data);
+        try {
+        const opRes = await axios.get(`https://localhost:7014/api/OpeningHours/business/${id}`);
+        setOpeningHours(opRes.data);
+        } catch (e) {
+          console.warn("Otevírací hodiny nenalezeny", e);
+          setOpeningHours([]); 
+        }
       } catch (err) {
         console.error("Chyba při načítání:", err);
         setError("Nepodařilo se načíst data");
@@ -52,19 +59,28 @@ export const BusinessDetail = () => {
             <p>{business.info}</p>
         </div>
       </div>
-      
       <div className="second">
         <div className="opening-hours info-card">
           <h3>Otevírací hodiny</h3>
           <ul>
-            {days.map(day => (
-              <li key={day.key}>
-                <strong>{day.label}:</strong> {business[day.key] || "Zavřeno"}
-              </li>
-            ))}
+            {Array.isArray(openingHours) && openingHours.length > 0 ? (
+              days.map(day => {
+                const hourRecord = openingHours.find(h => 
+                  h.day.trim().toLowerCase() === day.label.toLowerCase()
+                );
+                return (
+                  <li key={day.key}>
+                    <strong>{day.label}:</strong> {hourRecord 
+                      ? `${hourRecord.start.substring(0, 5)} – ${hourRecord.end.substring(0, 5)}` 
+                      : "Zavřeno"}
+                  </li>
+                );
+              })
+            ) : (
+              <p>Otevírací hodiny nejsou k dispozici</p>
+            )}
           </ul>
         </div>
-
         <div className="address info-card">
           <h3>Kde nás najdete</h3>
           <p>{business.street} {business.houseNumber}, {business.city}</p>

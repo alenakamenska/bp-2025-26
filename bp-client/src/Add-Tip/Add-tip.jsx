@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react"; 
 import "./Add-tip.css"; 
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom"; 
@@ -10,29 +10,33 @@ import { useAuthContext } from "../Providers/AuthProvider";
 export const AddTip = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
     const navigate = useNavigate();
-    const [state] = useAuthContext(); 
+    const [state] = useAuthContext();
+    const [isSubmitting, setIsSubmitting] = useState(false); 
 
-    const onSubmit = data => {
-    const userId = state.profile?.["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"] 
-                   || state.profile?.["http://schemas.microsoft.com/ws/2008/06/identity/claims/nameidentifier"]
-                   || state.profile?.sub
-                   || state.profile?.nameid;
-    
-    const payload = {
-        name: data.name,
-        info: data.info    
+    const onSubmit = async (data) => {
+        setIsSubmitting(true);
+        const userId = state.profile?.["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"] 
+                    || state.profile?.["http://schemas.microsoft.com/ws/2008/06/identity/claims/nameidentifier"]
+                    || state.profile?.sub
+                    || state.profile?.nameid;
+        
+        const payload = {
+            name: data.name,
+            info: data.info,
+            userId: userId 
+        };
+        try {
+            const response = await axios.post("https://localhost:7014/api/Tips", payload, {
+                headers: { Authorization: `Bearer ${state.accessToken}` }
+            });
+            navigate("/rady");
+        } catch (error) {
+            console.error("Chyba při ukládání rady:", error.response?.data || error.message);
+            alert("Nepodařilo se uložit radu. Zkuste to prosím znovu.");
+        } finally {
+            setIsSubmitting(false);
+        }
     };
-
-    axios.post("https://localhost:7014/api/Tips", payload, {
-        headers: { Authorization: `Bearer ${state.accessToken}` }
-    })
-    .then(response => {
-        navigate("/rady"); 
-    })
-    .catch(error => {
-        console.error(error.response?.data);    
-    });
-};
 
     return (
         <div className="login-container"> 
@@ -45,13 +49,14 @@ export const AddTip = () => {
                     {...register("name", { required: "Název musíte vyplnit" })}
                     placeholder="Např. Jak zalévat rajčata..."
                 />
-                <label>Popis rady</label>
+                <label className="form-label">Popis rady</label>
                 <textarea
                     rows="5"
-                    style={{ width: '100%', padding: '10px' }} 
+                    className={`form-textarea ${errors.info ? 'error-border' : ''}`}
+                    style={{ width: '100%', padding: '10px', borderRadius: '8px' }} 
                     {...register("info", { 
                         required: "Popis je povinný",
-                        minLength: { value: 10, message: "Popis musí být delší" }
+                        minLength: { value: 10, message: "Popis musí být delší než 10 znaků" }
                     })}
                     placeholder="Podrobný popis vaší rady..."
                 />
@@ -59,7 +64,8 @@ export const AddTip = () => {
                 <Button 
                     variant="primary" 
                     type="submit" 
-                    text="Uložit radu" 
+                    text={isSubmitting ? "Ukládám..." : "Uložit radu"} 
+                    disabled={isSubmitting} 
                 />
             </form>
         </div>

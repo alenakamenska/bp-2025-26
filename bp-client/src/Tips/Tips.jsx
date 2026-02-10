@@ -18,18 +18,16 @@ export const Tips = () => {
 
   const isLoggedIn = !!state.accessToken;    
   const navigate = useNavigate(); 
-
   const handleDeleteTip = async (id) => {
     if (!window.confirm("Opravdu chcete tuto radu smazat?")) return;
-
     try {
         await axios.delete(`https://localhost:7014/api/Tips/${id}`, {
             headers: { Authorization: `Bearer ${state.accessToken}` }
         });
         setTips(prevTips => prevTips.filter(t => t.id !== id));
     } catch (err) {
-        console.error(err);
-        alert("Nepodařilo se smazat radu");
+        console.error("Nepodařilo se smazat tip:", err.response?.data || err.message);
+        alert("Nepodařilo se smazat radu. Zkontrolujte své oprávnění.");
     }
   };
 

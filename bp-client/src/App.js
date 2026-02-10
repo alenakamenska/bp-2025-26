@@ -13,6 +13,7 @@ import { Business } from "./Businesses/Businesses";
 import { BusinessDetail } from "./BusinessDetail/BusinessDetail";
 import { Products } from "./Products/Products";
 import { BusinessSettings } from "./BusinessSettings/BusinessSettings";
+import { ProductDetail } from "./ProductDetail/ProductDetail";
 
 function App() {
   return (
@@ -53,6 +54,9 @@ function App() {
         </Route>
         <Route path="/sprava-podniku/:id" element={<FrontLayout />}>
           <Route index element={<BusinessSettings/>} />
+        </Route>
+        <Route path="/produkt/:id" element={<FrontLayout />}>
+          <Route index element={<ProductDetail/>} />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -20,15 +20,31 @@ export const BusinessSettings = () => {
         { value: "", label: "Vyberte kategorii..." },
         ...categories.map(c => ({ value: c.id, label: c.name }))
     ];
+    const userId = state.profile?.["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"] 
+                   || state.profile?.["http://schemas.microsoft.com/ws/2008/06/identity/claims/nameidentifier"]
+                   || state.profile?.sub
+                   || state.profile?.nameid;
 
     useEffect(() => {
-        axios.get(`https://localhost:7014/api/Businesses/${businessId}`)
-            .then(res => setBusinessName(res.data.name))
-            .catch(err => console.error("Chyba při načítání podniku:", err));
-
-        axios.get("https://localhost:7014/api/Categories")
-            .then(res => setCategories(res.data))
-            .catch(err => console.error("Chyba kategorií:", err));
+        const loadDetail = async () => {
+            try {
+            const [businessRes, categoriesRes] = await Promise.all([
+                axios.get(`https://localhost:7014/api/Businesses/${businessId}`),
+                axios.get("https://localhost:7014/api/Categories")
+            ]);
+            if (!businessRes.data.userIds.includes(userId)) {
+                navigate("/uzivatel");
+            }
+            setBusinessName(businessRes.data.name);
+            setCategories(categoriesRes.data);
+            } catch (err) {
+                console.error("Chyba při načítání dat:", err);
+                navigate("/uzivatel");
+            }
+        };
+        if (businessId) {
+            loadDetail();
+        }
     }, [businessId]);
 
     const { register, handleSubmit, formState: { errors } } = useForm();
@@ -53,10 +69,9 @@ export const BusinessSettings = () => {
                 BusinessId: Number(businessId)
             };
             if (isNaN(productPayload.BusinessId) || isNaN(productPayload.CategoryId)) {
-                alert("Chyba: Neplatné ID firmy nebo kategorie.");
+                alert("Chyba: Neplatné ID firmy nebo kategorie");
                 return;
             }
-
             await axios.post(
                 "https://localhost:7014/api/Products", 
                 productPayload, 

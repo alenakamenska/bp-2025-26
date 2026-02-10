@@ -22,6 +22,7 @@ export const Business = () => {
 
     return (
         <div className="business-page-wrapper">
+            
             <aside className="business-sidebar">
                 <div className="sidebar-section">
                     <h3>Hledat</h3>

@@ -5,10 +5,8 @@
     justify-content: center;
     align-items: flex-start;
     padding: 20px;
-    max-width: 1000px;
+    max-width: 1300px;
     margin: 0 auto;  
-    box-shadow: 0 5px 5px 2px rgba(76, 89, 40, 0.2);
-    border-radius: 15px;
 }
 
 .form-column {

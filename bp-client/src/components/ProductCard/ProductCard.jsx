@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 export default function ProductCard({ id, image, name, price, info}) {
   const navigate = useNavigate(); 
   const handleDetailClick = () => {
-    navigate(`/podnik/${id}`); 
+    navigate(`/produkt/${id}`); 
   };
 
   return (

@@ -1,0 +1,4 @@
+.server-error-container{
+    padding: 10px;
+    color: var(--danger-color);
+}
