@@ -4,6 +4,7 @@ import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "../components/Button/Button";
 import Card from "../components/Card/card";
+import { MapComponent } from "../components/Map/Map";
 
 export const ProductDetail = () => {
   const [product, setProduct] = useState(null);
@@ -79,11 +80,14 @@ export const ProductDetail = () => {
             owner={false} 
           />
         </div>
-        <div className="address info-card">
+        <div className="address">
           <h3>Kde nás najdete</h3>
           <p>{business.street} {business.houseNumber}, {business.city}</p>
           <div className="map-box">
-             <p style={{fontStyle: 'italic'}}>Mapa se načítá podle souřadnic...</p>
+             <MapComponent lat={business.latitude} 
+              lon={business.longitude} 
+              businessName={business.name}
+              height={180}/>
           </div>
         </div>
       </div>

@@ -3,6 +3,7 @@ import "./BusinessDetail.css";
 import axios from "axios"; 
 import { useParams } from "react-router-dom";
 import ProductCard from "../components/ProductCard/ProductCard";
+import { MapComponent } from "../components/Map/Map";
 
 export const BusinessDetail = () => {
   const [business, setBusiness] = useState(null);
@@ -85,13 +86,16 @@ export const BusinessDetail = () => {
           <h3>Kde nás najdete</h3>
           <p>{business.street} {business.houseNumber}, {business.city}</p>
           <div className="map-box">
-             <p style={{fontStyle: 'italic'}}>Mapa se načítá podle souřadnic...</p>
+              <MapComponent lat={business.latitude} 
+              lon={business.longitude} 
+              businessName={business.name}
+              height={280}/>
           </div>
         </div>
       </div>
 
-      <h2 className="page-title">Produkty v nabídce</h2>
-      <div className="businesses-grid">
+      <h2 className="business-page-title">Produkty v nabídce</h2>
+      <div className="businesses-businesses-grid">
           {products && products.length > 0 ? (
               products.map((p) => (
                   <ProductCard

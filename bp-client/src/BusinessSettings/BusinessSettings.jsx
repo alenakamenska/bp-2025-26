@@ -6,6 +6,7 @@ import { Input } from "../components/Input/Input";
 import { Button } from "../components/Button/Button";
 import { useAuthContext } from "../Providers/AuthProvider";
 import { Select } from "../components/Select/Select";
+import Error from "../components/Error/Error";
 
 export const BusinessSettings = () => {
     const { id } = useParams(); 
@@ -16,10 +17,15 @@ export const BusinessSettings = () => {
     const [businessName, setBusinessName] = useState("");
     const [showNewCategory, setShowNewCategory] = useState(false);
     const [newCategoryName, setNewCategoryName] = useState("");
+    const [serverErrors, setServerErrors] = useState([]);
+
+    const { register, handleSubmit, formState: { errors } } = useForm();
+
     const categoryOptions = [
         { value: "", label: "Vyberte kategorii..." },
         ...categories.map(c => ({ value: c.id, label: c.name }))
     ];
+
     const userId = state.profile?.["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"] 
                    || state.profile?.["http://schemas.microsoft.com/ws/2008/06/identity/claims/nameidentifier"]
                    || state.profile?.sub
@@ -28,29 +34,33 @@ export const BusinessSettings = () => {
     useEffect(() => {
         const loadDetail = async () => {
             try {
-            const [businessRes, categoriesRes] = await Promise.all([
-                axios.get(`https://localhost:7014/api/Businesses/${businessId}`),
-                axios.get("https://localhost:7014/api/Categories")
-            ]);
-            if (!businessRes.data.userIds.includes(userId)) {
-                navigate("/uzivatel");
-            }
-            setBusinessName(businessRes.data.name);
-            setCategories(categoriesRes.data);
+                const [businessRes, categoriesRes] = await Promise.all([
+                    axios.get(`https://localhost:7014/api/Businesses/${businessId}`),
+                    axios.get("https://localhost:7014/api/Categories")
+                ]);
+                
+                if (!businessRes.data.userIds.includes(userId)) {
+                    navigate("/uzivatel");
+                    return;
+                }
+                
+                setBusinessName(businessRes.data.name);
+                setCategories(categoriesRes.data);
             } catch (err) {
                 console.error("Chyba při načítání dat:", err);
                 navigate("/uzivatel");
             }
         };
+
         if (businessId) {
             loadDetail();
         }
-    }, [businessId]);
-
-    const { register, handleSubmit, formState: { errors } } = useForm();
+    }, [businessId, userId, navigate]);
 
     const onSubmit = async (data) => {
         let finalCategoryId = data.categoryId;
+        setServerErrors([]);
+
         try {
             if (showNewCategory && newCategoryName) {
                 const catResponse = await axios.post(
@@ -68,10 +78,6 @@ export const BusinessSettings = () => {
                 CategoryId: Number(finalCategoryId),
                 BusinessId: Number(businessId)
             };
-            if (isNaN(productPayload.BusinessId) || isNaN(productPayload.CategoryId)) {
-                alert("Chyba: Neplatné ID firmy nebo kategorie");
-                return;
-            }
             await axios.post(
                 "https://localhost:7014/api/Products", 
                 productPayload, 
@@ -82,10 +88,21 @@ export const BusinessSettings = () => {
                     } 
                 }
             );
+
             navigate(`/podnik/${businessId}`);
         } catch (error) {
             console.error("Chyba při ukládání:", error.response?.data || error.message);
-            alert("Nepodařilo se uložit produkt. Zkontrolujte konzoli.");
+            const errorData = error.response?.data;
+            if (errorData) {
+                if (Array.isArray(errorData)) {
+                    setServerErrors(errorData);
+                } else if (typeof errorData === 'object') {
+                    const flatErrors = Object.values(errorData).flat();
+                    setServerErrors(flatErrors);
+                } else {
+                    setServerErrors([error.message]);
+                }
+            }
         }
     };
 
@@ -94,11 +111,32 @@ export const BusinessSettings = () => {
             <h2>Přidat produkt do: {businessName}</h2>
             <form onSubmit={handleSubmit(onSubmit)} className="business-flex-form">
                 <div className="form-column">
-                    <Input label="Název produktu" {...register("name", { required: "Povinné" })} />
-                    <Input label="Cena (Kč)" type="number" step="0.01" {...register("price", { required: "Povinné" })} />
-                    <Input label="URL obrázku" {...register("imageURL")} />
+                    <Input 
+                        label="Název produktu" 
+                        {...register("name", { required: "Název produktu je povinný" })} 
+                        error={errors.name} 
+                    />
+                    <Input 
+                        label="Cena (Kč)" 
+                        type="number" 
+                        step="0.01" 
+                        {...register("price", { 
+                            required: "Cena je povinná",
+                            min: { value: 0, message: "Cena nesmí být záporná" }
+                        })} 
+                        error={errors.price}
+                    />
+                    <Input 
+                        label="URL obrázku" 
+                        {...register("imageURL")} 
+                        error={errors.imageURL}
+                    />
                     <label>Popis produktu</label>
-                    <textarea className="custom-textarea" {...register("info")} rows="4" />
+                    <textarea 
+                        className={`custom-textarea ${errors.info ? "input-error" : ""}`} 
+                        {...register("info")} 
+                        rows="4" 
+                    />
                 </div>
                 <div className="form-column">
                     <h3>Zařazení</h3>
@@ -108,12 +146,15 @@ export const BusinessSettings = () => {
                                 <Select 
                                     label="Kategorie"
                                     options={categoryOptions}
+                                    {...register("categoryId", { 
+                                        required: !showNewCategory ? "Musíte vybrat kategorii" : false 
+                                    })}
                                     error={errors.categoryId}
-                                    {...register("categoryId", { required: "Musíte vybrat kategorii" })}
                                 />
                                 <Button 
-                                    type="primary" 
-                                    text="přidat kategorií" 
+                                    type="button"
+                                    className="primary" 
+                                    text="přidat kategorii" 
                                     onClick={() => setShowNewCategory(true)} 
                                     style={{ marginTop: '25px' }} 
                                 />
@@ -127,7 +168,8 @@ export const BusinessSettings = () => {
                                     onChange={(e) => setNewCategoryName(e.target.value)} 
                                 />
                                 <Button 
-                                    type="primary" 
+                                    type="button"
+                                    className="primary" 
                                     text="Zpět" 
                                     onClick={() => setShowNewCategory(false)} 
                                     style={{ marginTop: '25px' }}
@@ -135,11 +177,11 @@ export const BusinessSettings = () => {
                             </div>
                         )}
                     </div>
+                    <Error serverErrors={serverErrors}/>
                     <Button
-                        type="primary"
-                        text = "uložit produkt"
-                        onClick={() => onSubmit} 
-                    />
+                        type="submit"
+                        className="primary"
+                        text="uložit produkt"/>
                 </div>
             </form>
         </div>
