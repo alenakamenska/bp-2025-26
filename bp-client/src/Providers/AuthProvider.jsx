@@ -8,12 +8,17 @@ const parseJwt = (token) => {
     try {
         const base64Url = token.split(".")[1];
         const base64 = base64Url.replace("-", "+").replace("_", "/");
-        return JSON.parse(window.atob(base64));
+        const data = JSON.parse(window.atob(base64));
+        if (data.exp && data.exp * 1000 < Date.now()) {
+            console.warn("Token vypršel");
+            localStorage.removeItem("token"); 
+            return {};
+        }
+        return data;
     } catch (e) {
         return {};
     }
 };
-
 const storedToken = localStorage.getItem("token");
 let storedUser = null;
 

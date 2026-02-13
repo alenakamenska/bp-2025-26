@@ -1,0 +1,131 @@
+.business-settings-page {
+    margin: 40px auto;
+    padding: 20px;
+}
+
+.settings-page-title {
+    color: var(--primary-color);
+    text-align: center;
+    margin-bottom: 40px;
+    font-size: 2.2rem;
+    font-weight: 700;
+}
+
+.tabs-navigation {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #e8e8e8;
+}
+
+.tab-btn {
+    padding: 12px 30px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #888;
+    border-bottom: 3px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.tab-btn:hover {
+    color: var(--secondary-color);
+}
+
+.tab-btn.active {
+    color: var(--primary-color);
+    border-bottom: 3px solid var(--primary-color); 
+}
+
+.business-header-edit, 
+.business-flex-form-container {
+    background: var(--background-color);
+    padding: 40px;
+    border-radius: 20px;
+}
+
+.business-header-edit h2,
+.business-flex-form-container h2 {
+    margin-top: 0;
+    color: var(--primary-color);
+    font-size: 1.5rem;
+    margin-bottom: 30px;
+}
+
+.business-edit-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+}
+
+.opening-hours-section {
+    grid-column: span 2;
+    background: var(--background-color);
+}
+
+.hours-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 15px;
+}
+
+.day-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px 10px;
+    background: white;
+    border-radius: 8px;
+    border: 1px solid #eee;
+}
+
+.day-row strong {
+    min-width: 80px;
+    color: #444;
+}
+
+.oh-title{
+    margin-bottom: 20px;
+}
+
+.custom-textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 1rem;
+    transition: border-color 0.2s;
+}
+
+.textarea-full {
+    grid-column: span 2;
+}
+
+.flex-row {
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+}
+
+.fade-in {
+    animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 800px) {
+    .business-edit-grid, .business-flex-form {
+        grid-template-columns: 1fr;
+        flex-direction: column;
+    }
+    .opening-hours-section, .textarea-full {
+        grid-column: span 1;
+    }
+}

@@ -142,7 +142,6 @@ export const MyBusiness = () => {
                             <div key={field.id} className="opening-hours-row">
                                 <span className="day-label">{field.day}</span>
                                 <input type="hidden" {...register(`openingHours.${index}.day`)} />
-                                
                                 <input 
                                     type="time" 
                                     {...register(`openingHours.${index}.start`)} 

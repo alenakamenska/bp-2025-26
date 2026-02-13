@@ -1,5 +1,5 @@
 import React from "react";
-import "../Error/Error.css"
+import "../Error/Error.css";
 
 const Error = ({ serverErrors }) => {
   if (!Array.isArray(serverErrors) || serverErrors.length === 0) {
@@ -8,9 +8,11 @@ const Error = ({ serverErrors }) => {
 
   return (
     <div className="server-error-container">
-        {serverErrors.map((err, index) => (
-            <div key={index}>{err.description}</div>
-        ))}
+      {serverErrors.map((err, index) => (
+        <div key={index}>
+          {typeof err === "object" && err.description ? err.description : err}
+        </div>
+      ))}
     </div>
   );
 };

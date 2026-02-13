@@ -16,5 +16,5 @@
 }
 
 .error-message{
-    color: var(--primary-color)
+    color: var(--danger-color)
 }
