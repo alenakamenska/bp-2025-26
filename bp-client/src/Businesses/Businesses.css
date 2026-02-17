@@ -83,6 +83,11 @@
     gap: 25px;
 }
 
+.pagination{
+    display: flex;
+    justify-content: space-between;
+}
+
 @media (max-width: 900px) {
     .business-page-wrapper {
         flex-direction: column;

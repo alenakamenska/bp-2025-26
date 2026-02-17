@@ -30,3 +30,9 @@
     background-color: var(--danger-color);
     color:bisque
 }
+
+.btn:disabled{
+  background-color: gray; 
+  color: white;
+  cursor: not-allowed;
+}
