@@ -6,13 +6,20 @@ import axios from "axios";
 import { useAuthContext, SET_ACCESS_TOKEN } from "../Providers/AuthProvider"; 
 import { Input } from "../components/Input/Input";
 import { Button } from "../components/Button/Button";
-import Error from "../components/Error/Error"; 
+import Error from "../components/Error/Error";
+import { GoogleLogin } from '@react-oauth/google'; 
 
 export const Login = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
     const navigate = useNavigate();
     const [, dispatch] = useAuthContext();
     const [serverErrors, setServerErrors] = useState([]);
+
+    const handleLoginSuccess = (token) => {
+        localStorage.setItem("token", token);
+        dispatch({ type: SET_ACCESS_TOKEN, payload: token });
+        navigate("/uzivatel");
+    };
 
     const onSubmit = data => {
         setServerErrors([]);
@@ -21,30 +28,46 @@ export const Login = () => {
             password: data.password
         })
         .then(response => {
-            const token = response.data.token; 
-            if (token) {
-                localStorage.setItem("token", token);
-                dispatch({ type: SET_ACCESS_TOKEN, payload: token });
-                navigate("/uzivatel");
+            if (response.data.token) {
+                handleLoginSuccess(response.data.token);
             }
         })
         .catch(error => {
-            if (error.response && error.response.data) {
-                const data = error.response.data;
-                if (Array.isArray(data)) {
-                    setServerErrors(data);
-                } 
-                else if (data.message) {
-                    setServerErrors([{ description: data.message }]);
-                }
-                else if (typeof data === 'string') {
-                    setServerErrors([{ description: data }]);
-                }
-            } else {
-                setServerErrors([{ description: "Server neodpovídá" }]);
-            }
-            console.error("Chyba při přihlášení:", error.response?.data);
+            handleApiError(error);
         });
+    };
+
+    const onGoogleSuccess = async (credentialResponse) => {
+        setServerErrors([]);
+        try {
+            const response = await axios.post("https://localhost:7014/api/auth/google", {
+                idToken: credentialResponse.credential,
+                selectedRole: "user" 
+            });
+            if (response.data.token) {
+                console.log("Google přihlášení úspěšné");
+                handleLoginSuccess(response.data.token);
+            }
+        } catch (error) {
+            handleApiError(error);
+        }
+    };
+    const handleApiError = (error) => {
+        if (error.response && error.response.data) {
+            const data = error.response.data;
+            if (Array.isArray(data)) {
+                setServerErrors(data);
+            } 
+            else if (data.message) {
+                setServerErrors([{ description: data.message }]);
+            }
+            else {
+                setServerErrors([{ description: typeof data === 'string' ? data : "Chyba při přihlášení" }]);
+            }
+        } else {
+            setServerErrors([{ description: "Server neodpovídá" }]);
+        }
+        console.error("API Error:", error.response?.data || error.message);
     };
 
     return (
@@ -67,6 +90,15 @@ export const Login = () => {
                 />
                 <Error serverErrors={serverErrors} />
                 <Button variant="primary" type="submit" text="Přihlásit se"/>
+                <div className="separator">nebo</div>
+                <div className="google-btn-container">
+                    <GoogleLogin
+                        onSuccess={onGoogleSuccess}
+                        onError={() => setServerErrors([{ description: "Google přihlášení selhalo" }])}
+                        useOneTap
+                        use_fedcm_for_prompt={true}
+                    />
+                </div>
             </form>
         </div>
     );
