@@ -4,11 +4,19 @@ import "../ProductCard/ProductCard.css";
 import { Button } from "../Button/Button";
 import { useNavigate } from "react-router-dom";
 
-export default function ProductCard({ id, image, name, price, info}) {
+export default function ProductCard({ id, image, name, price, info, isOwner, onDelete, onUpdate}) {
   const navigate = useNavigate(); 
   const handleDetailClick = () => {
     navigate(`/produkt/${id}`); 
   };
+
+  const handleDelete = () =>{
+        onDelete(id);
+  }
+
+  const handleUpdate = () =>{
+        onUpdate(id);
+  }
 
   return (
     <div className="product-card">
@@ -22,6 +30,12 @@ export default function ProductCard({ id, image, name, price, info}) {
           <Button text="více" variant="primary" onClick={handleDetailClick} />
             <p className="product-card-price">{price} Kč</p>
         </div>
+          {isOwner &&(
+            <div className="product-card-footer">
+              <Button text="smazat" variant="danger" onClick={handleDelete} />
+              <Button text="upravit" variant="secondary" onClick={handleUpdate} />
+            </div>
+          )}
       </div>
     </div>
   );

@@ -14,6 +14,7 @@ import { BusinessDetail } from "./BusinessDetail/BusinessDetail";
 import { Products } from "./Products/Products";
 import { BusinessSettings } from "./BusinessSettings/BusinessSettings";
 import { ProductDetail } from "./ProductDetail/ProductDetail";
+import { ProductUpdate } from "./ProductUpdate/ProductUpdate";
 
 function App() {
   return (
@@ -57,6 +58,9 @@ function App() {
         </Route>
         <Route path="/produkt/:id" element={<FrontLayout />}>
           <Route index element={<ProductDetail/>} />
+        </Route>
+         <Route path="/upravit-produkt/:id" element={<FrontLayout />}>
+          <Route index element={<ProductUpdate/>} />
         </Route>
       </Routes>
     </BrowserRouter>

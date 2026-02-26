@@ -1,0 +1,9 @@
+.product-update-container{
+    margin: 1rem 10rem;
+}
+
+@media (max-width: 768px) {
+    .product-update-container{
+        margin: 1rem 3rem;
+    }
+}
