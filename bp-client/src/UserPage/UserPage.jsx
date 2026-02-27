@@ -3,6 +3,7 @@ import "./UserPage.css";
 import { useAuthContext } from "../Providers/AuthProvider";
 import { CiUser, CiLock, CiViewList, CiLogout } from "react-icons/ci";
 import { MyBusiness } from "../MyBusinesses/MyBusinesses";
+import { UserUpdate } from "../UserUpdate/UserUpdate";
 
 export const UserPage = () => {
   const [activeTab, setActiveTab] = useState("profile");
@@ -39,7 +40,7 @@ export const UserPage = () => {
       </aside>
 
       <main className="user-content">
-        {activeTab === "profile" && <h1>Nastavení profilu</h1>}
+        {activeTab === "profile" && <UserUpdate/>}
         {activeTab === "business" && isBusiness && <MyBusiness />}
         {activeTab === "security" && <h1>Změna hesla</h1>}
       </main>
