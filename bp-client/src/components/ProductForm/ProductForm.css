@@ -1,0 +1,37 @@
+.tips-dynamic-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    max-width: 100%;
+    width: 100%;
+}
+
+.dynamic-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    width: 100%;
+}
+
+.dynamic-row > div {
+    flex: 1;
+    min-width: 0;
+}
+
+.dynamic-row button {
+    flex-shrink: 0;
+    margin-bottom: 5px; 
+}
+
+@media (max-width: 768px) {
+    .business-flex-form {
+        flex-direction: column;
+    }
+    .dynamic-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .dynamic-row button {
+        align-self: flex-end;
+    }
+}
