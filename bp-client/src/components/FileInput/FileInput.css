@@ -1,0 +1,38 @@
+.image-upload-container {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.file-input {
+    padding: 10px;
+    border: 1px dashed #ccc;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.progress-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+progress {
+    flex: 1;
+    height: 12px;
+}
+
+.image-preview img {
+    max-width: 200px;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    margin-top: 10px;
+}
+
+.success-msg {
+    color: var(--light-green);
+    font-size: 0.85rem;
+    margin: 5px 0 0 0;
+}
