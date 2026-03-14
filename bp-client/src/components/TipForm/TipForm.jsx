@@ -29,42 +29,37 @@ export const TipForm = ({ initialData = {}, onSubmit, isSubmitting, categoryOpti
             />
             <div className="selects" style={{ gap: '15px', marginBottom: '15px' }}>
                 <div className="category-section">
-                    {!showNewCategory ? (
-                        <div className="flex-row" style={{ display: 'flex', alignItems: 'flex-end', gap: '10px' }}>
-                            <Select 
-                                label="Kategorie" 
-                                options={categoryOptions} 
-                                {...register("categoryId")} 
-                            />
-                            <Button 
-                                type="button" 
-                                text="Nová" 
-                                onClick={(e) => {
-                                    e.preventDefault();
-                                    setShowNewCategory(true);
-                                }} 
-                            />
-                        </div>
-                    ) : (
-                        <div className="flex-row" style={{ display: 'flex', alignItems: 'flex-end', gap: '10px' }}>
-                            <Input 
-                                label="Název nové kategorie" 
-                                value={newCategoryName} 
-                                onChange={(e) => setNewCategoryName(e.target.value)} 
-                            />
-                            <Button 
-                                type="button" 
-                                text="Zpět" 
-                                onClick={(e) => {
-                                    e.preventDefault();
-                                    setShowNewCategory(false);
-                                }} 
-                            />
-                        </div>
-                    )}
-                </div>
+                {!showNewCategory ? (
+                    <div className="flex-row" style={{ display: 'flex', alignItems: 'flex-end', gap: '10px' }}>
+                        <Select 
+                            label="Kategorie" 
+                            options={categoryOptions} 
+                            {...register("categoryId")} 
+                        />
+                        <Button 
+                            type="button" 
+                            text="Nová" 
+                            onClick={() => setShowNewCategory(true)} 
+                        />
+                    </div>
+                ) : (
+                    <div className="flex-row" style={{ display: 'flex', alignItems: 'flex-end', gap: '10px' }}>
+                        <Input 
+                            label="Název nové kategorie" 
+                            error={errors.newCategoryName}
+                            {...register("newCategoryName", { required: showNewCategory ? "Zadejte název kategorie" : false })}
+                        />
+                        <Button 
+                            type="button" 
+                            text="Zpět" 
+                            onClick={() => {
+                                setShowNewCategory(false);
+                            }} 
+                        />
+                    </div>
+                )}
             </div>
-            <label className="form-label">Popis rady</label>
+            </div>
             <TextArea
                 {...register("info", { required: "Popis je povinný" })}
             />

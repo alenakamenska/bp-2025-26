@@ -8,12 +8,13 @@ import Error from "../Error/Error";
 import IconButton from "../iconButton";
 import { CiTrash } from "react-icons/ci";
 import { TextArea } from "../TextArea/TextArea";
+import {FileInput } from "../FileInput/FileInput"; 
 
 export const ProductForm = ({ onSubmit, categoryOptions, serverErrors, initialData = null }) => {
     const [showNewCategory, setShowNewCategory] = useState(false);
     const [newCategoryName, setNewCategoryName] = useState("");
 
-    const {register, handleSubmit, control, reset, formState: { errors },} = useForm({
+    const { register, handleSubmit, control, watch, setValue, reset, formState: { errors } } = useForm({
         defaultValues: initialData || {
             nameProduct: "",
             price: "",
@@ -64,11 +65,12 @@ export const ProductForm = ({ onSubmit, categoryOptions, serverErrors, initialDa
                     {...register("price", { required: "Cena je povinná" })}
                     error={errors.price}
                 />
-                <Input
-                    label="URL obrázku produktu"
-                    {...register("imageProductURL")}
+                <FileInput
+                    label="Obrázek produktu"
+                    initialImage={watch("imageProductURL")}
+                    onUploadSuccess={(url) => setValue("imageProductURL", url)} 
                 />
-                <label>Popis produktu</label>
+                <input type="hidden" {...register("imageProductURL")} />
                 <TextArea
                     label="Popis produktu"
                     placeholder="Napište podrobnosti o produktu..."
@@ -81,10 +83,9 @@ export const ProductForm = ({ onSubmit, categoryOptions, serverErrors, initialDa
                     <h3>Tipy k produktu</h3>
                     {fields.map((field, index) => (
                         <div key={field.id} className="dynamic-row">
-                           <Input
+                            <Input
                                 label="Název rady"
                                 {...register(`tips.${index}.nameTip`)} 
-                                error={errors.nameProduct}
                             />
                             <TextArea
                                 label="text rady"
@@ -92,7 +93,7 @@ export const ProductForm = ({ onSubmit, categoryOptions, serverErrors, initialDa
                                 {...register(`tips.${index}.text`)} 
                             />
                             <IconButton
-                                icon={CiTrash}                                    
+                                icon={CiTrash}                                     
                                 onClick={() => remove(index)}
                                 color="var(--danger-color)"
                             />
@@ -101,7 +102,7 @@ export const ProductForm = ({ onSubmit, categoryOptions, serverErrors, initialDa
                     <Button 
                         type="button" 
                         text="+ Přidat další tip" 
-                        onClick={() => append({ text: "" })} 
+                        onClick={() => append({ nameTip: "", text: "" })} 
                         className="secondary"
                     />
                 </div>

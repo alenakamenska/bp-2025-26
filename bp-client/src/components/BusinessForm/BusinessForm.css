@@ -1,0 +1,145 @@
+.business-flex-form {
+    display: flex;
+    flex-direction: row;
+    gap: 50px;           
+    justify-content: center;
+    align-items: flex-start;
+    padding: 20px;
+    max-width: 1300px;
+    margin: 0 auto;  
+}
+
+.form-column {
+    flex: 1;             
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.opening-hours-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    transition: background 0.3s;
+}
+
+.opening-hours-row.closed-day {
+    background-color: #f9f9f9;
+    color: #999;
+}
+
+.day-control {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    min-width: 120px;
+}
+
+.closed-label {
+    font-weight: bold;
+    color: #d9534f;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 20px;
+}
+
+.switch input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+  border-radius: 34px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 14px;
+  width: 14px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #4a6741;
+}
+
+input:checked + .slider:before {
+  transform: translateX(20px);
+}
+
+.opening-hours-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: white; 
+    opacity: 0.8;
+    padding: 10px 15px;
+    margin-bottom: 8px;
+    border-radius: 12px;
+    border: 1px solid rgba(76, 89, 40, 0.1); 
+    transition: transform 0.2s ease;
+}
+
+.opening-hours-row:hover {
+    transform: translateX(5px);
+}
+
+.day-label {
+    font-weight: 600;
+    color: var(--primary-color);
+    width: 90px;
+}
+
+.time-input {
+    border: 1px solid var(--primary-color);
+    border-radius: 6px;
+    padding: 5px 8px;
+    background-color: #fff;
+    color: var(--primary-color);
+    font-family: inherit;
+    cursor: pointer;
+    outline: none;
+}
+
+.time-input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(76, 89, 40, 0.1);
+}
+
+.time-separator {
+    color: var(--primary-color);
+    font-size: 0.9em;
+    font-style: italic;
+    margin: 0 10px;
+}
+
+
+@media (max-width: 768px) {
+    .business-flex-form {
+        flex-direction: column;
+        align-items: center;
+        display: block;
+        padding: 0px;
+    }
+}
