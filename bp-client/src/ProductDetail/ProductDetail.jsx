@@ -5,10 +5,12 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "../components/Button/Button";
 import Card from "../components/Card/card";
 import { MapComponent } from "../components/Map/Map";
+import { TipCard } from "../components/TipCard/TipCard";
 
 export const ProductDetail = () => {
   const [product, setProduct] = useState(null);
   const [business, setBusiness] = useState(null);
+  const [tips, setTips] = useState(null);
   const { id } = useParams(); 
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
@@ -18,11 +20,12 @@ export const ProductDetail = () => {
     const fetchAllData = async () => {
       try {
         setLoading(true);
-        const [prodRes, bizRes] = await Promise.all([
+        const [prodRes, bizRes, tipsRes] = await Promise.all([
           axios.get(`https://localhost:7014/api/Products/${id}`),
-          axios.get(`https://localhost:7014/api/Businesses/by-product/${id}`)
+          axios.get(`https://localhost:7014/api/Businesses/by-product/${id}`),
+          axios.get(`https://localhost:7014/api/Products/product/${id}`)
         ]);
-        
+        setTips(tipsRes.data)
         setProduct(prodRes.data);
         setBusiness(bizRes.data);
       } catch (err) {
@@ -92,6 +95,27 @@ export const ProductDetail = () => {
         </div>
       </div>
     )}
+  <section className="product-tips-section">
+    <div className="section-header">
+      <h2 className="section-title">Rady k produktu</h2>
+      <div className="title-underline"></div>
+    </div>
+    {tips && tips.length > 0 ? (
+      <div className="tips-grid">
+        {tips.map((item) => (
+          <TipCard 
+            key={item.id} 
+            tip={item} 
+            onUpdate={() => navigate(`/upravit-radu/${item.id}`)}
+          />
+        ))}
+      </div>
+    ) : (
+      <div className="no-tips-fallback">
+        <p>Zatím nebyly přidány žádné rady. Buďte první!</p>
+      </div>
+    )}
+    </section>
   </div>
 )
 };
