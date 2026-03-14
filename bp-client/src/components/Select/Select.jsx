@@ -1,12 +1,13 @@
 import React, { forwardRef } from 'react';
 import "./Select.css"
 
-export const Select = forwardRef(({ label, error, options, ...props }, ref) => {
+export const Select = forwardRef(({ label, error, multiple, options, ...props }, ref) => {
   return (
     <div className="input-group">
       {label && <label>{label}</label>}
       <select
         ref={ref}
+        multiple={multiple}
         {...props}
         >
         {options.map((opt) => (

@@ -4,6 +4,7 @@ const IconButton = ({ icon: Icon, color = "#fff", size = 24, bg = "transparent",
   return (
     <button
       onClick={onClick}
+      type="button"
       style={{
         display: "flex",
         alignItems: "center",
@@ -13,9 +14,11 @@ const IconButton = ({ icon: Icon, color = "#fff", size = 24, bg = "transparent",
         borderRadius: "50%",
         padding: "0.5rem",
         cursor: "pointer",
+        flexShrink: 0,
+        color: color
       }}
     >
-      <Icon size={size} color={color} />
+      {Icon && <Icon size={size} color={color} />}    
     </button>
   );
 };

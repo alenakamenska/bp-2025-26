@@ -7,6 +7,7 @@
     background-color: var(--primary-color);
     font-family: sans-serif;
     color: #fefae0;
+    min-width: 250px;
   }
   
   .card-image {
