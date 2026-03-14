@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import "./UserPage.css";
 import { useAuthContext } from "../Providers/AuthProvider";
-import { CiUser, CiLock, CiViewList, CiLogout } from "react-icons/ci";
+import { CiUser, CiLock, CiViewList, CiLogout, CiLight } from "react-icons/ci";
 import { MyBusiness } from "../MyBusinesses/MyBusinesses";
 import { UserUpdate } from "../UserUpdate/UserUpdate";
+import { PasswordReset } from "../components/PasswordReset/PasswordReset";
+import { MyTips } from "../MyTips/MyTips";
 
 export const UserPage = () => {
   const [activeTab, setActiveTab] = useState("profile");
@@ -17,6 +19,7 @@ export const UserPage = () => {
     { id: "profile", label: "Profil", icon: <CiUser /> },
     ...(isBusiness ? [{ id: "business", label: "Moje podniky", icon: <CiViewList /> }] : []),
     { id: "security", label: "Změna hesla", icon: <CiLock /> },
+    { id: "tips", label: "Moje rady", icon: <CiLight /> },
   ];
 
   return (
@@ -42,7 +45,8 @@ export const UserPage = () => {
       <main className="user-content">
         {activeTab === "profile" && <UserUpdate/>}
         {activeTab === "business" && isBusiness && <MyBusiness />}
-        {activeTab === "security" && <h1>Změna hesla</h1>}
+        {activeTab === "security" && <PasswordReset/>}
+        {activeTab === "tips" && <MyTips/>}
       </main>
     </div>
   );
