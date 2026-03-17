@@ -4,7 +4,7 @@ import "../Card/card.css";
 import { Button } from "../Button/Button";
 import { useNavigate } from "react-router-dom";
 
-export default function Card({ id, image, name, street, houseNumber, city, owner }) {
+export default function Card({ id, image, name, street, houseNumber, city, owner, isVerified }) {
   const navigate = useNavigate(); 
 
   const fullAddress = street && houseNumber 
@@ -21,7 +21,13 @@ export default function Card({ id, image, name, street, houseNumber, city, owner
         <img src={image} alt={name} className="card-image" />
       )}
       <div className="card-body">
-        <h3 className="card-title">{name}</h3>
+        <h3 className="card-title">
+          {name}
+          <span className={`status-badge ${isVerified ? "verified" : "unverified"}`} 
+            title={isVerified ? "Ověřený podnik" : "Neověřený podnik"}>
+            <span className="status-icon">{isVerified ? "✓" : "!"}</span>
+          </span>
+        </h3>
         <p className="card-address">{fullAddress}</p>
         <div className="card-actions">
           <Button text="více" variant="wheat" onClick={handleDetailClick} />

@@ -21,11 +21,35 @@
   }
   
   .card-title {
-    font-size: 18px;
-    font-weight: bold;
-    margin: 0 0 6px 0;
-  }
-  
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.status-badge {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 14px;
+  border: 2px solid #fff;
+  box-shadow: 0 0 3px rgba(0,0,0,0.3);
+  flex-shrink: 0;
+}
+
+.status-badge.verified {
+  background-color: var(--light-green);
+  color: white;
+}
+
+.status-badge.unverified {
+  background-color: var(--danger-color); 
+  color: white;
+  animation: pulse-soft 2s infinite; 
+}
   .card-address,
   .card-hours {
     font-size: 14px;
