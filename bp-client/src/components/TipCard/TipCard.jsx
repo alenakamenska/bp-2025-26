@@ -3,13 +3,16 @@ import './TipCard.css';
 import { Button } from '../Button/Button';
 import { useNavigate } from 'react-router-dom';
 
-export const TipCard = ({ tip, userId, onDelete }) => {
+export const TipCard = ({ tip, userId, onDelete, onUpdate }) => {
     const navigate = useNavigate(); 
     const handleDetailClick = () => {
         navigate(`/rady/${tip.id}`); 
     };
     const handleDelete = () =>{
         onDelete(tip.id);
+    }
+    const handleUpdate = () =>{
+        onUpdate(tip.id);
     }
   return (
     <div className="tip-card">
@@ -22,7 +25,10 @@ export const TipCard = ({ tip, userId, onDelete }) => {
         
         <Button text="více" variant="primary" onClick={handleDetailClick}/>
         {tip.userId === userId && ( 
-            <Button text="smazat" variant="danger" onClick={handleDelete}/>
+            <>
+              <Button text="smazat" variant="danger" onClick={handleDelete}/>
+              <Button text="upravit" variant="secondary" onClick={handleUpdate}/>
+            </>
         )}
         </div>
     </div>
