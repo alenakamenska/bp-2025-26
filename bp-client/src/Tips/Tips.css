@@ -1,10 +1,12 @@
 .tips-page-wrapper {
     width: 100%;
     background-color: var(--background-color); 
+    min-height: 100vh;
 }
 
 .tips-hero {
-    height: 500px;
+    height: 450px;
+    background-image: url("../images/form1.png");
     background-size: cover;
     background-position: center;
     position: relative;
@@ -12,12 +14,12 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-image: url("../images/form1.png");
 }
 
 .hero-overlay {
     width: 100%;
     height: 100%;
+    background: rgba(0, 0, 0, 0.2);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -43,10 +45,71 @@
     opacity: 0.9;
 }
 
+.tips-controls-wrapper {
+    background-color: var(--primary-color);
+    padding: 25px 0;
+    box-shadow: inset 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.controls-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
+    padding: 0 30px;
+}
+
+.controls-left select, 
+.search-input-wrapper input {
+    background-color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 15px;
+    font-size: 0.95rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.controls-left select {
+    min-width: 200px;
+    cursor: pointer;
+}
+
+.controls-right {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.search-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search-icon-small {
+    position: absolute;
+    left: 15px;
+    color: var(--primary-color);
+    font-size: 1.2rem;
+}
+
+.search-input-wrapper input {
+    padding-left: 45px;
+    width: 320px;
+}
+
 .product-list-container {
-    padding: 2rem 1.5rem 5rem 1.5rem;
+    padding: 3rem 1.5rem 5rem 1.5rem;
     max-width: 1300px;
     margin: 0 auto;
+    min-height: 600px;
+    position: relative;
+}
+
+.product-list-container.is-loading .tips-grid {
+    opacity: 0.5;
+    pointer-events: none;
 }
 
 .tips-grid {
@@ -72,44 +135,29 @@
 }
 
 .add-tip-card:hover {
-  background-color: var(--background-color);
-  transform: translateY(-5px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    border-color: var(--primary-color);
+    background-color: rgba(74, 103, 65, 0.03);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
+
 .add-icon {
     font-size: 60px;
-    font-weight: 200;
     margin-bottom: 5px;
 }
 
 .add-text {
     font-size: 1.1rem;
     font-weight: bold;
-}
-
-.status-message {
-    text-align: center;
-    padding: 100px;
-    font-size: 1.5rem;
-    color: var(--primary-color);
-}
-
-.no-data-info {
-    text-align: center;
-    padding: 50px;
-    color: #666;
-    font-style: italic;
+    text-transform: uppercase;
 }
 
 @media (max-width: 768px) {
-    .hero-content h1 {
-        font-size: 2.5rem;
+    .controls-container {
+        flex-direction: column;
+        gap: 15px;
     }
-    .tips-hero {
-        height: 250px;
-    }
-    .tips-grid {
-        grid-template-columns: 1fr;
-        gap: 20px;
+    .search-input-wrapper input {
+        width: 100%;
     }
 }
