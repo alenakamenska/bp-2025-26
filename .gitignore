@@ -1,0 +1,10 @@
+**/bin/
+**/obj/
+**/appsettings.json
+**/appsettings.Development.json
+**/appsettings.Release.json
+.vs/
+.vscode/
+**/Properties/launchSettings.json
+*.suo
+*.sln.docstates
