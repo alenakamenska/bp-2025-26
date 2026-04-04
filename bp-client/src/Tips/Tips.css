@@ -130,7 +130,6 @@
   min-height: 250px;
   transition: all 0.3s ease;
   color: var(--primary-color);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.5);
   font-weight: bold;
 }
 

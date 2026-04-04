@@ -7,11 +7,13 @@ import { useAuthContext } from "../Providers/AuthProvider";
 import { Select } from "../components/Select/Select";
 import { CiSearch } from "react-icons/ci";
 import { Button } from "../components/Button/Button";
+import EmptyState from "../components/EmptyState/EmptyState";
+import Loading from "../components/Loading/Loading";
 
 export const Tips = () => {
   const [tips, setTips] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [setError] = useState(null);
   const [state] = useAuthContext(); 
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -19,9 +21,8 @@ export const Tips = () => {
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("Vše");
   const navigate = useNavigate();
+  const API_BASE_URL = process.env.REACT_APP_API_URL;
   const isLoggedIn = !!state.accessToken; 
-  const userId = state.profile?.["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"] 
-                 || state.profile?.sub;
 
   const categoryOptions = useMemo(() => [
     { value: "Vše", label: "Všechny kategorie" },
@@ -29,28 +30,28 @@ export const Tips = () => {
   ], [categories]);
 
   useEffect(() => {
-    axios.get("https://localhost:7014/api/Categories")
+    axios.get(`${API_BASE_URL}/Categories`)
       .then(res => setCategories(res.data))
       .catch(err => console.error("Chyba kategorií:", err));
-  }, []);
+  }, [API_BASE_URL]);
 
   useEffect(() => {
     const fetchTips = async () => {
       try {
         setLoading(true);
-        const url = `https://localhost:7014/api/Tips?searchTerm=${searchTerm}&category=${selectedCategory}&page=${currentPage}&pageSize=9`;
+        const url = `${API_BASE_URL}/Tips?searchTerm=${searchTerm}&category=${selectedCategory}&page=${currentPage}&pageSize=9`;
         const response = await axios.get(url);
         setTips(response.data.items || []); 
         setTotalPages(response.data.totalPages || 1);
       } catch (err) {
+        console.error("Chyba při načítání rad:", err);
         setError("Nepodařilo se načíst rady");
       } finally {
         setLoading(false);
       }
     };
-
     fetchTips();
-  }, [searchTerm, selectedCategory, currentPage]);
+  }, [searchTerm, selectedCategory, currentPage, API_BASE_URL]);
 
   return (
     <div className="tips-page-wrapper">
@@ -86,9 +87,7 @@ export const Tips = () => {
       </div>
       <main className={`product-list-container ${loading ? "is-loading" : ""}`}>
         {loading && (
-          <div className="loading-overlay-simple">
-            <span>Aktualizuji...</span>
-          </div>
+         <Loading message="Načítám tipy..." />
         )}
         <div className="tips-grid">
           {isLoggedIn && (
@@ -97,12 +96,14 @@ export const Tips = () => {
               <span className="add-text">Přidat novou radu</span>
             </div>
           )}
-          {tips.map((item) => (
-            <TipCard key={item.id} tip={item} userId={userId} />
+          {!loading && tips.map((item) => (
+            <TipCard key={item.id} tip={item} isOwner={false} />
           ))}
         </div>
         {tips.length === 0 && !loading && (
-          <p className="no-data-info">Žádné rady neodpovídají hledání</p>
+          <EmptyState
+            title="Žádné rady nebyly nalezeny"
+          />
         )}
         {totalPages > 1 && (
           <div className="pagination">
