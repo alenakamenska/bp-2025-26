@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useMemo } from "react";
 import "./Products.css"; 
 import axios from "axios"; 
-import { useNavigate } from "react-router-dom"; 
-import { useAuthContext } from "../Providers/AuthProvider";
 import { CiSearch, CiFilter, CiSliderHorizontal } from "react-icons/ci"; 
 import ProductCard from "../components/ProductCard/ProductCard";
 import { Select } from "../components/Select/Select";
 import { Button } from "../components/Button/Button";
+import EmptyState from "../components/EmptyState/EmptyState";
+import Loading from "../components/Loading/Loading";
 
 export const Products = () => {
     const [products, setProducts] = useState([]);
@@ -17,8 +17,8 @@ export const Products = () => {
     const [loading, setLoading] = useState(false); 
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
-    const navigate = useNavigate();
-    const [state] = useAuthContext(); 
+    const API_BASE_URL = process.env.REACT_APP_API_URL;
+
     const categoryOptions = useMemo(() => [
         { value: "Vše", label: "Všechny kategorie" },
         ...categories.map(c => ({ value: c.name, label: c.name }))
@@ -32,16 +32,16 @@ export const Products = () => {
     ];
 
     useEffect(() => {
-        axios.get("https://localhost:7014/api/Categories")
+        axios.get(`${API_BASE_URL}/Categories`)
             .then(res => setCategories(res.data))
             .catch(err => console.error("Chyba kategorií:", err));
-    }, []);
+    }, [API_BASE_URL]);
 
     useEffect(() => {
         const fetchProducts = async () => {
             setLoading(true);
             try {
-                const url = `https://localhost:7014/api/Products?searchTerm=${searchTerm}&category=${selectedCategory}&sortOrder=${sortOrder}&page=${currentPage}&pageSize=15`;
+                const url = `${API_BASE_URL}/Products?searchTerm=${searchTerm}&category=${selectedCategory}&sortOrder=${sortOrder}&page=${currentPage}&pageSize=15`;
                 const response = await axios.get(url);
                 setProducts(response.data.items || []);
                 setTotalPages(response.data.totalPages || 1);
@@ -54,8 +54,9 @@ export const Products = () => {
         const delayDebounceFn = setTimeout(() => {
             fetchProducts();
         }, 300);
+
         return () => clearTimeout(delayDebounceFn);
-    }, [searchTerm, selectedCategory, sortOrder, currentPage]);
+    }, [searchTerm, selectedCategory, sortOrder, currentPage, API_BASE_URL]);
 
     const handleFilterChange = (setter) => (e) => {
         setter(e.target.value);
@@ -99,9 +100,8 @@ export const Products = () => {
             </aside>
             <main className="business-main-content">
                 <h2 className="page-title">Produkty</h2>
-                
                 {loading ? (
-                    <div className="loading-spinner">Načítám produkty...</div>
+                    <Loading/>
                 ) : (
                     <>
                         <div className="businesses-grid">
@@ -117,7 +117,9 @@ export const Products = () => {
                             ))}
                         </div>
                         {products.length === 0 && (
-                            <p className="no-results">Pro toto vyhledávání jsme nic nenašli</p>
+                            <EmptyState
+                                title="Žádné produkty nebyly nalezeny"
+                            />
                         )}
                     </>
                 )}

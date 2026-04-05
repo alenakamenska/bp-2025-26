@@ -1,34 +1,48 @@
 import React, { useState, useEffect, useMemo } from "react"; 
-import "./Add-tip.css"; 
-import { useNavigate } from "react-router-dom"; 
+import "./EditTip.css"; 
+import { useNavigate, useParams } from "react-router-dom"; 
 import axios from "axios"; 
 import { useAuthContext } from "../Providers/AuthProvider";
 import { TipForm } from "../components/TipForm/TipForm";
+import { useAuthorization } from "../useAuthorization";
 import { toast } from "react-toastify";
+import Loading from "../components/Loading/Loading";
 
-export const AddTip = () => {
+export const EditTip = () => {
+    const { id } = useParams();
     const navigate = useNavigate();
     const [state] = useAuthContext();
     const [isSubmitting, setIsSubmitting] = useState(false); 
     const [categories, setCategories] = useState([]);
+    const [initialTipData, setInitialTipData] = useState(null); 
+    const { checkAccess } = useAuthorization();
     const API_BASE_URL = process.env.REACT_APP_API_URL;
 
     const userId = state.profile?.["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"] 
-                || state.profile?.sub;
+                   || state.profile?.sub;
 
     useEffect(() => {
         const loadInitialData = async () => {
             try {
-                const [catRes] = await Promise.all([
+                const [catRes, tipRes] = await Promise.all([
                     axios.get(`${API_BASE_URL}/Categories`),
+                    axios.get(`${API_BASE_URL}/Tips/${id}`),
                 ]);
+                const isOk = checkAccess(tipRes.data, userId, "tip");
+                if (!isOk) return;
                 setCategories(catRes.data);
+                setInitialTipData({
+                    name: tipRes.data.name,
+                    info: tipRes.data.info,
+                    categoryId: tipRes.data.categoryId || "",
+                    userId: tipRes.data.userId 
+                });
             } catch (err) {
                 console.error("Chyba při načítání:", err);
             }
         };
         loadInitialData();
-    }, [API_BASE_URL]); 
+    }, [id]); 
 
     const categoryOptions = useMemo(() => [
         { value: "", label: "Vyberte kategorii (nepovinné)..." },
@@ -39,6 +53,7 @@ export const AddTip = () => {
         setIsSubmitting(true);
         try {
             let finalCategoryId = formData.categoryId ? Number(formData.categoryId) : null;
+            
             if (formData.newCategoryName) {
                 const catRes = await axios.post(
                     `${API_BASE_URL}/Categories`, 
@@ -48,23 +63,27 @@ export const AddTip = () => {
                 finalCategoryId = catRes.data.id;
             }
             const payload = {
+                id: Number(id), 
                 name: formData.name,
                 info: formData.info,
-                userId: userId,
-                categoryId: finalCategoryId 
+                userId: initialTipData.userId, 
+                categoryId: finalCategoryId,
             };
-            await axios.post(`${API_BASE_URL}/Tips`, payload, {
+
+            await axios.put(`${API_BASE_URL}/Tips/${id}`, payload, {
                 headers: { Authorization: `Bearer ${state.accessToken}` }
             });
-            toast.success("Rada byla úspěšně uložena");
+            toast.success("rada byla úspěšně aktualizována")
             navigate("/rady");
         } catch (error) {
             console.error("Chyba:", error.response?.data || error.message);
-            toast.error("Radu se nepodařilo uložit");
+            toast.error("Nepodařilo se uložit radu")
         } finally {
             setIsSubmitting(false);
         }
     };
+
+    if (!initialTipData) return <Loading/>;
 
     return (
         <div className="login-container"> 
@@ -72,7 +91,8 @@ export const AddTip = () => {
                 onSubmit={onSubmit} 
                 isSubmitting={isSubmitting}
                 categoryOptions={categoryOptions}
-                title="Přidat radu"
+                title="Upravit radu" 
+                initialData={initialTipData}
             />
         </div>
     );

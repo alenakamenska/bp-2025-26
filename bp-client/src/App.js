@@ -15,16 +15,26 @@ import { Products } from "./Products/Products";
 import { BusinessSettings } from "./BusinessSettings/BusinessSettings";
 import { ProductDetail } from "./ProductDetail/ProductDetail";
 import { ProductUpdate } from "./ProductUpdate/ProductUpdate";
+import { EditTip } from "./EditTip/EditTip";
+import { ProtectedRoute } from "./ProtectedRoute";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { NotFound } from "./NotFound/NotFound";
+import { Unauthorize } from "./Unauthorize/Unauthorize";
+import { ForgotPassword } from "./ForgotPassword/ForgotPassword";
+import { ResetPassword } from "./ResetPassword/ResetPassword";
+import { PrivacyPolicy } from "./PrivacyPolicy/PrivacyPolicy";
 
 function App() {
   return (
-    <BrowserRouter>  
+    <BrowserRouter> 
+      <ToastContainer position="bottom-right" autoClose={3000} theme="dark" /> 
       <Routes>
         <Route path="/" element={<FrontLayout />}>
           <Route index element={<Home />} />
         </Route>
         <Route path="/uzivatel" element={<FrontLayout />}>
-          <Route index element={<UserPage />} />
+          <Route index element={<ProtectedRoute><UserPage /></ProtectedRoute>} />
         </Route>
         <Route path="/rady/:id" element={<FrontLayout />} >
             <Route index element={<TipDetail/>}/>
@@ -45,7 +55,7 @@ function App() {
           <Route index element={<Register/>} />
         </Route>
         <Route path="/pridat-radu" element={<FrontLayout />}>
-          <Route index element={<AddTip/>} />
+          <Route index element={<ProtectedRoute><AddTip/></ProtectedRoute>} />
         </Route>
         <Route path="/podniky" element={<FrontLayout />}>
           <Route index element={<Business/>} />
@@ -61,6 +71,24 @@ function App() {
         </Route>
          <Route path="/upravit-produkt/:id" element={<FrontLayout />}>
           <Route index element={<ProductUpdate/>} />
+        </Route>
+        <Route path="/upravit-radu/:id" element={<FrontLayout />}>
+          <Route index element={<EditTip/>} />
+        </Route>
+        <Route path="/pristup-odmitnut" element={<FrontLayout />}>
+          <Route index element={<Unauthorize/>} />
+        </Route>
+         <Route path="/ochrana-soukromi" element={<FrontLayout />}>
+          <Route index element={<PrivacyPolicy/>} />
+        </Route>
+       <Route path="/zapomenute-heslo" element={<FrontLayout />}>
+          <Route index element={<ForgotPassword/>} />
+        </Route>
+        <Route path="/reset-hesla" element={<FrontLayout />}>
+          <Route index element={<ResetPassword/>} />
+        </Route>
+        <Route path="*" element={<FrontLayout />}>
+          <Route path="*" element={<NotFound/>} />
         </Route>
       </Routes>
     </BrowserRouter>

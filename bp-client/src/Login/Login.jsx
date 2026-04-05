@@ -1,29 +1,32 @@
 import React, { useState } from "react"; 
 import "./Login.css";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom"; 
 import axios from "axios"; 
 import { useAuthContext, SET_ACCESS_TOKEN } from "../Providers/AuthProvider"; 
 import { Input } from "../components/Input/Input";
 import { Button } from "../components/Button/Button";
 import Error from "../components/Error/Error";
 import { GoogleLogin } from '@react-oauth/google'; 
+import { toast } from "react-toastify";
+import { useNavigate, Link } from "react-router-dom";
 
 export const Login = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
     const navigate = useNavigate();
     const [, dispatch] = useAuthContext();
     const [serverErrors, setServerErrors] = useState([]);
+    const API_BASE_URL = process.env.REACT_APP_API_URL;
 
     const handleLoginSuccess = (token) => {
         localStorage.setItem("token", token);
         dispatch({ type: SET_ACCESS_TOKEN, payload: token });
         navigate("/uzivatel");
+        toast.success("Přihlášení proběhlo úspěšně")
     };
 
     const onSubmit = data => {
         setServerErrors([]);
-        axios.post("https://localhost:7014/api/Auth/Login", {
+        axios.post(`${API_BASE_URL}/Auth/Login`, {
             email: data.email, 
             password: data.password
         })
@@ -40,7 +43,7 @@ export const Login = () => {
     const onGoogleSuccess = async (credentialResponse) => {
         setServerErrors([]);
         try {
-            const response = await axios.post("https://localhost:7014/api/auth/google", {
+            const response = await axios.post(`${API_BASE_URL}/auth/google`, {
                 idToken: credentialResponse.credential,
                 selectedRole: "user" 
             });
@@ -52,6 +55,7 @@ export const Login = () => {
             handleApiError(error);
         }
     };
+
     const handleApiError = (error) => {
         if (error.response && error.response.data) {
             const data = error.response.data;
@@ -88,6 +92,9 @@ export const Login = () => {
                   {...register("password", { required: "Heslo je povinné" })}
                   placeholder="zadejte heslo..."
                 />
+                <div className="forgot-password-link">
+                    <Link to="/zapomenute-heslo">Zapomněli jste heslo?</Link>
+                </div>
                 <Error serverErrors={serverErrors} />
                 <Button variant="primary" type="submit" text="Přihlásit se"/>
                 <div className="separator">nebo</div>

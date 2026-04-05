@@ -5,8 +5,10 @@ import { Input } from "../Input/Input";
 import { Button } from "../Button/Button";
 import { FileInput } from "../FileInput/FileInput"; 
 import "./BusinessForm.css";
+import { AddColleague } from "../AddColeague/AddColleague";
 
 export const BusinessForm = ({ onSubmit, accessToken, initialData = null }) => {
+    const API_BASE_URL = process.env.REACT_APP_API_URL;
     const { register, control, handleSubmit, setValue, watch, reset, formState: { errors } } = useForm({
         defaultValues: initialData || {
             name: "",
@@ -16,6 +18,7 @@ export const BusinessForm = ({ onSubmit, accessToken, initialData = null }) => {
             imageURL: "", 
             info: "",
             ICO: "",
+            isVerified: false,
             openingHours: [
                 { day: "Pondělí", start: "08:00", end: "16:00", isClosed: false },
                 { day: "Úterý", start: "08:00", end: "16:00", isClosed: false },
@@ -40,25 +43,27 @@ export const BusinessForm = ({ onSubmit, accessToken, initialData = null }) => {
     const handleAresFetch = async (ico) => {
         if (ico.length === 8) {
             try {
-                const res = await axios.get(`https://localhost:7014/api/Businesses/ares/${ico}`, {
+                const res = await axios.get(`${API_BASE_URL}/Businesses/ares/${ico}`, {
                     headers: { Authorization: `Bearer ${accessToken}` }
                 });
-                if (res.data) {
-                    const d = res.data;
-                    setValue("name", d.obchodniJmeno);
-                    setValue("city", d.sidlo?.nazevObce || "");
-                    setValue("street", d.sidlo?.nazevUlice || "");
-                    const cp = d.sidlo?.cisloDomovni;
-                    const co = d.sidlo?.cisloOrientacni;
+                if (res.data && res.data.data) {
+                    const ares = res.data.data; 
+                    setValue("name", ares.obchodniJmeno);
+                    setValue("city", ares.sidlo?.nazevObce || "");
+                    setValue("street", ares.sidlo?.nazevUlice || "");
+                    const cp = ares.sidlo?.cisloDomovni;
+                    const co = ares.sidlo?.cisloOrientacni;
                     setValue("houseNumber", co ? `${cp}/${co}` : `${cp}`);
+                    setValue("isVerified", res.data.isVerified);
                 }
             } catch (err) { 
-                console.warn("ARES error"); 
+                console.warn("ARES error", err); 
             }
         }
     };
 
     return (
+        <>
         <form onSubmit={handleSubmit(onSubmit)} className="business-flex-form">
             <div className="form-column">
                 <Input 
@@ -77,18 +82,18 @@ export const BusinessForm = ({ onSubmit, accessToken, initialData = null }) => {
                 <Input label="Město" {...register("city")} />
                 <Input label="Ulice" {...register("street")} />
                 <Input label="Číslo popisné" {...register("houseNumber")} />
-                <FileInput 
-                    label="Logo zahradnictví"
-                    initialImage={watch("imageURL")}
-                    onUploadSuccess={(url) => setValue("imageURL", url)} 
-                />
-                <input type="hidden" {...register("imageURL")} />
                 <label className="form-label">Popis firmy</label>
                 <textarea 
                     className="custom-textarea" 
                     {...register("info")} 
                     rows="4" 
                 />
+                <FileInput 
+                    label="Logo zahradnictví"
+                    initialImage={watch("imageURL")}
+                    onUploadSuccess={(url) => setValue("imageURL", url)} 
+                />
+                <input type="hidden" {...register("imageURL")} />
             </div>
             <div className="form-column">
                 <h3>Otevírací hodiny</h3>
@@ -138,5 +143,16 @@ export const BusinessForm = ({ onSubmit, accessToken, initialData = null }) => {
                 </div>
             </div>
         </form>
+        {initialData && initialData.id && (
+            <div className="form-section-separator">
+                <hr />
+                <AddColleague 
+                    businessId={initialData.id} 
+                    accessToken={accessToken} 
+                    ownerId={initialData?.ownerId}                
+                />
+            </div>
+        )}
+        </>
     );
 };

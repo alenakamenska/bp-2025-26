@@ -1,3 +1,10 @@
 .flex-row{
     align-items: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: row;
+}
+
+.flex-row button{
+    margin-top: 0.2rem;
 }

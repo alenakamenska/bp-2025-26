@@ -1,59 +1,74 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useForm } from "react-hook-form";
-import { useAuthContext } from "../Providers/AuthProvider";
+import { useAuthContext, SET_ACCESS_TOKEN } from "../Providers/AuthProvider"; 
 import { Input } from "../components/Input/Input";
 import { Button } from "../components/Button/Button";
 import { Select } from "../components/Select/Select";
+import { toast } from "react-toastify";
+import Loading from "../components/Loading/Loading";
 
 export const UserUpdate = () => {
-    const [state] = useAuthContext();
+    const [state, dispatch] = useAuthContext();
     const { register, handleSubmit, reset, formState: { errors } } = useForm();
     const [loading, setLoading] = useState(true);
     const [serverError, setServerError] = useState("");
+    const API_BASE_URL = process.env.REACT_APP_API_URL;
     const roleOptions = [
         { value: "User", label: "Zákazník" },
         { value: "Business", label: "Zahradnictví/Květinářství" }
     ];
+
     useEffect(() => {
         const fetchUserData = async () => {
-        try {
-            const res = await axios.get("https://localhost:7014/api/Users/user", {
-                headers: { Authorization: `Bearer ${state.accessToken}` }
-            });
-            reset({
-                email: res.data?.email || "",
-                phoneNumber: res.data?.phoneNumber || "",
-            role: (res.data?.roles && res.data.roles.length > 0) ? res.data.roles[0] : ""});
-            setLoading(false);
-        } catch (err) {
-            console.error("Chyba při načítání profilu:", err);
-            setLoading(false);
-        }
-    };
-
+            try {
+                const res = await axios.get(`${API_BASE_URL}/Users/user`, {
+                    headers: { Authorization: `Bearer ${state.accessToken}` }
+                });
+                reset({
+                    email: res.data?.email || "",
+                    phoneNumber: res.data?.phoneNumber || "",
+                    role: (res.data?.roles && res.data.roles.length > 0) ? res.data.roles[0] : ""
+                });
+                setLoading(false);
+            } catch (err) {
+                console.error("Chyba při načítání uživatele:", err);
+                setLoading(false);
+            }
+        };
         if (state.accessToken) fetchUserData();
-    }, [state.accessToken, reset]);
+    }, [state.accessToken, reset, API_BASE_URL]); 
 
     const onUpdate = async (formData) => {
         try {
             setServerError("");
-            await axios.put("https://localhost:7014/api/Users/update-profile", formData, {
+            const response = await axios.put(`${API_BASE_URL}/Users/update-profile`, formData, {
                 headers: { Authorization: `Bearer ${state.accessToken}` }
             });
-            alert("Profil úspěšně aktualizován!");
+            
+            if (response.data && response.data.token) {
+                dispatch({ 
+                    type: SET_ACCESS_TOKEN, 
+                    payload: response.data.token 
+                });
+                localStorage.setItem("token", response.data.token);
+                toast.success("Profil byl úspěšně aktualizován");
+            } else {
+                toast.success("Profil byl úspěšně aktualizován");
+            }
         } catch (err) {
             setServerError("Aktualizace se nezdařila");
             console.error(err);
+            toast.error("Nepodařilo se uložit změny");
         }
     };
 
-    if (loading) return <p>Načítám údaje...</p>;
+    if (loading) return <Loading/>;
+
     return (
         <div className="profile-container">
             <h2>Můj profil</h2>
-            {serverError && <p style={{ color: "red" }}>{serverError}</p>}
-            
+            {serverError && <p className="error-message" style={{ color: "red" }}>{serverError}</p>}
             <form onSubmit={handleSubmit(onUpdate)}>
                 <Input 
                     label="Email" 

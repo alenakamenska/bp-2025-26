@@ -1,56 +1,99 @@
-import React, { createContext, useReducer, useContext } from "react";
+import React, { createContext, useReducer, useContext, useEffect } from "react";
 
 export const SET_ACCESS_TOKEN = "SET_ACCESS_TOKEN";
 export const CLEAR_ACCESS_TOKEN = "CLEAR_ACCESS_TOKEN";
 
 const parseJwt = (token) => {
-    if (!token) return {};
+    if (!token) return null; 
     try {
         const base64Url = token.split(".")[1];
-        const base64 = base64Url.replace("-", "+").replace("_", "/");
+        const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/"); 
         const data = JSON.parse(window.atob(base64));
         if (data.exp && data.exp * 1000 < Date.now()) {
-            console.warn("Token vypršel");
-            localStorage.removeItem("token"); 
-            return {};
+            return null; 
         }
         return data;
     } catch (e) {
-        return {};
+        console.error("Chyba při parsování JWT:", e);
+        return null;
     }
 };
-const storedToken = localStorage.getItem("token");
-let storedUser = null;
 
-if (storedToken) {
-    storedUser = parseJwt(storedToken); 
+const storedToken = localStorage.getItem("token");
+const storedUser = parseJwt(storedToken);
+
+if (storedToken && !storedUser) {
+    localStorage.removeItem("token");
 }
 
 const initialState = {
-    accessToken: storedToken || null,
-    userId: storedUser ? storedUser.sub : null,
+    accessToken: storedUser ? storedToken : null,
+    userId: storedUser ? (storedUser.sub || storedUser["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"]) : null,
     profile: storedUser || null
 };
 
 const reducer = (state, action) => {
     switch (action.type) {
         case SET_ACCESS_TOKEN:
-            let tokenData = parseJwt(action.payload);
-            return { ...state, accessToken: action.payload, userId: tokenData.sub, profile: tokenData }
-        case CLEAR_ACCESS_TOKEN:
-            return { ...state, accessToken: null, userId: null, profile: null }
-        default: return state;
-    }
-}
+            const token = action.payload;
+            const tokenData = parseJwt(token);
+            if (!tokenData) return state;
+            localStorage.setItem("token", token);
 
-export const AuthContext = createContext([initialState, () => {}]);
-export const AuthProvider = props => {
+            return { 
+                ...state, 
+                accessToken: token, 
+                userId: tokenData.sub || tokenData["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"], 
+                profile: tokenData 
+            };
+
+        case CLEAR_ACCESS_TOKEN:
+            localStorage.removeItem("token");
+            return { 
+                ...state, 
+                accessToken: null, 
+                userId: null, 
+                profile: null 
+            };
+
+        default: 
+            return state;
+    }
+};
+
+export const AuthContext = createContext();
+
+export const AuthProvider = ({ children }) => {
     const [state, dispatch] = useReducer(reducer, initialState);
+
+    useEffect(() => {
+        const checkToken = () => {
+            if (state.accessToken) {
+                const decoded = parseJwt(state.accessToken);
+                if (!decoded) {
+                    console.warn("Token vypršel nebo je neplatný, odhlašuji uživatele...");
+                    dispatch({ type: CLEAR_ACCESS_TOKEN });
+                }
+            }
+        };
+
+        checkToken();
+        const interval = setInterval(checkToken, 60000); 
+        
+        return () => clearInterval(interval);
+    }, [state.accessToken]);
+
     return (
         <AuthContext.Provider value={[state, dispatch]}>
-            {props.children}
+            {children}
         </AuthContext.Provider>
     );
-}
+};
 
-export const useAuthContext = () => useContext(AuthContext);
+export const useAuthContext = () => {
+    const context = useContext(AuthContext);
+    if (!context) {
+        throw new Error("useAuthContext musí být použit uvnitř AuthProvideru");
+    }
+    return context;
+};

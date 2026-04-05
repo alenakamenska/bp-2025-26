@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import "./ProductDetail.css";
+import "./ProductDetail.css"; 
 import axios from "axios"; 
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "../components/Button/Button";
 import Card from "../components/Card/card";
 import { MapComponent } from "../components/Map/Map";
 import { TipCard } from "../components/TipCard/TipCard";
+import Loading from "../components/Loading/Loading";
 
 export const ProductDetail = () => {
   const [product, setProduct] = useState(null);
@@ -15,15 +16,16 @@ export const ProductDetail = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const API_BASE_URL = process.env.REACT_APP_API_URL;
 
   useEffect(() => {
     const fetchAllData = async () => {
       try {
         setLoading(true);
         const [prodRes, bizRes, tipsRes] = await Promise.all([
-          axios.get(`https://localhost:7014/api/Products/${id}`),
-          axios.get(`https://localhost:7014/api/Businesses/by-product/${id}`),
-          axios.get(`https://localhost:7014/api/Products/product/${id}`)
+          axios.get(`${API_BASE_URL}/Products/${id}`),
+          axios.get(`${API_BASE_URL}/Businesses/by-product/${id}`),
+          axios.get(`${API_BASE_URL}/Products/product/${id}`)
         ]);
         setTips(tipsRes.data)
         setProduct(prodRes.data);
@@ -35,11 +37,10 @@ export const ProductDetail = () => {
         setLoading(false);
       }
     };
-
     if (id) fetchAllData();
-  }, [id]); 
+  }, [id, API_BASE_URL]); 
 
-  if (loading) return <div className="loading-container">Načítám zahradní poklad...</div>;
+  if (loading) return <Loading />; 
   if (error || !product) return <div className="error-container">{error}</div>;
 
   const pName = product.name || product.Name;
@@ -81,6 +82,7 @@ export const ProductDetail = () => {
             houseNumber={business.houseNumber}
             city={business.city}
             owner={false} 
+            isVerified={business.isVerified}
           />
         </div>
         <div className="address">
@@ -90,7 +92,7 @@ export const ProductDetail = () => {
              <MapComponent lat={business.latitude} 
               lon={business.longitude} 
               businessName={business.name}
-              height={180}/>
+              height={250}/>
           </div>
         </div>
       </div>
@@ -101,18 +103,19 @@ export const ProductDetail = () => {
       <div className="title-underline"></div>
     </div>
     {tips && tips.length > 0 ? (
-      <div className="tips-grid">
+      <div className="product-tips-grid">
         {tips.map((item) => (
           <TipCard 
             key={item.id} 
             tip={item} 
+            isOwner={false}
             onUpdate={() => navigate(`/upravit-radu/${item.id}`)}
           />
         ))}
       </div>
     ) : (
       <div className="no-tips-fallback">
-        <p>Zatím nebyly přidány žádné rady. Buďte první!</p>
+        <p>Zatím nebyly přidány žádné rady</p>
       </div>
     )}
     </section>

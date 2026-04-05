@@ -4,24 +4,26 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios"; 
 import { TipCard } from "../components/TipCard/TipCard";
 import { useAuthContext } from "../Providers/AuthProvider";
+import EmptyState from "../components/EmptyState/EmptyState";
+import Loading from "../components/Loading/Loading";
 
 export const MyTips = () => {
   const [tips, setTips] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [state] = useAuthContext();  
-
+  const API_BASE_URL = process.env.REACT_APP_API_URL;
   const userId = state.profile?.["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"] 
                  || state.profile?.["http://schemas.microsoft.com/ws/2008/06/identity/claims/nameidentifier"]
                  || state.profile?.sub
                  || state.profile?.name;
 
-  const isLoggedIn = !!state.accessToken;    
   const navigate = useNavigate(); 
+
   const handleDeleteTip = async (id) => {
     if (!window.confirm("Opravdu chcete tuto radu smazat?")) return;
     try {
-        await axios.delete(`https://localhost:7014/api/Tips/${id}`, {
+        await axios.delete(`${API_BASE_URL}/Tips/${id}`, {
             headers: { Authorization: `Bearer ${state.accessToken}` }
         });
         setTips(prevTips => prevTips.filter(t => t.id !== id));
@@ -32,20 +34,22 @@ export const MyTips = () => {
 
   useEffect(() => {
     const fetchTips = async () => {
+      if (!userId) return; 
       try {
         setLoading(true);
-        const response = await axios.get(`https://localhost:7014/api/Tips/user/${userId}`);
+        const response = await axios.get(`${API_BASE_URL}/Tips/user/${userId}`);
         setTips(response.data);
       } catch (err) {
         console.error("Chyba při fetchování dat:", err);
+        setError("Nepodařilo se načíst vaše rady.");
       } finally {
         setLoading(false);
       }
     };
     fetchTips();
-  }, []); 
+  }, [userId, API_BASE_URL]); 
 
-  if (loading) return <div className="status-message"><p>Načítám rady a tipy...</p></div>;
+  if (loading) return <Loading/>;
   if (error) return <div className="status-message error"><p>{error}</p></div>;
 
   return (
@@ -56,16 +60,17 @@ export const MyTips = () => {
             <TipCard 
               key={item.id} 
               tip={item} 
-              userId={userId} 
+              isOwner={true}
               onDelete={handleDeleteTip} 
               onUpdate={() => navigate(`/upravit-radu/${item.id}`)}
             />
           ))}
         </div>
         {tips.length === 0 && (
-          <div className="no-data-container">
-            <p className="no-data-info">Zatím nebyly přidány žádné rady. Buďte první!</p>
-          </div>
+          <EmptyState
+            title="Zatím jste nepřidali žádné rady"
+            message="Zkuste přidat svoji první radu"
+          />
         )}
       </main>
     </div>

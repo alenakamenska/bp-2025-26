@@ -1,0 +1,25 @@
+.empty-state-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px; 
+  width: 100%;
+  text-align: center;
+  padding: 40px;
+}
+
+.empty-state-content {
+  max-width: 400px;
+}
+
+.empty-state-title {
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.empty-state-text {
+  color: #666;
+  line-height: 1.5;
+}

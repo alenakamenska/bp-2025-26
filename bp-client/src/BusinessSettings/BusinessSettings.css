@@ -59,60 +59,20 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 25px;
-}
-
-.opening-hours-section {
-    grid-column: span 2;
-    background: var(--background-color);
-}
-
-.hours-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 15px;
-}
-
-.day-row {
-    display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 5px 10px;
-    background: white;
-    border-radius: 8px;
-    border: 1px solid #eee;
-}
-
-.day-row strong {
-    min-width: 80px;
-    color: #444;
-}
-
-.oh-title{
-    margin-bottom: 20px;
-}
-
-.custom-textarea {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    font-family: inherit;
-    font-size: 1rem;
-    transition: border-color 0.2s;
-}
-
-.textarea-full {
-    grid-column: span 2;
-}
-
-.flex-row {
-    display: flex;
-    gap: 10px;
-    align-items: flex-end;
 }
 
 .fade-in {
     animation: fadeIn 0.4s ease-out;
+}
+
+.products-grid{
+    margin: 10px 50px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 2rem;
+    padding: 20px;
+    justify-content: center;
 }
 
 @keyframes fadeIn {
@@ -120,10 +80,16 @@
     to { opacity: 1; transform: translateY(0); }
 }
 
-@media (max-width: 800px) {
+@media (max-width: 768px) {
     .business-edit-grid, .business-flex-form {
         grid-template-columns: 1fr;
         flex-direction: column;
+    }
+    .business-flex-form-container{
+        padding: 0px;
+    }
+    .business-header-edit{
+        padding: 0px;
     }
     .opening-hours-section, .textarea-full {
         grid-column: span 1;

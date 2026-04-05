@@ -77,36 +77,7 @@ export const ProductForm = ({ onSubmit, categoryOptions, serverErrors, initialDa
                     {...register("infoProduct")}
                     error={errors.infoProduct}
                 />
-            </div>
-            <div className="form-column">
-                <div className="tips-dynamic-section">
-                    <h3>Tipy k produktu</h3>
-                    {fields.map((field, index) => (
-                        <div key={field.id} className="dynamic-row">
-                            <Input
-                                label="Název rady"
-                                {...register(`tips.${index}.nameTip`)} 
-                            />
-                            <TextArea
-                                label="text rady"
-                                placeholder="Např. Zalévat ke kořenům..."
-                                {...register(`tips.${index}.text`)} 
-                            />
-                            <IconButton
-                                icon={CiTrash}                                     
-                                onClick={() => remove(index)}
-                                color="var(--danger-color)"
-                            />
-                        </div>
-                    ))}
-                    <Button 
-                        type="button" 
-                        text="+ Přidat další tip" 
-                        onClick={() => append({ nameTip: "", text: "" })} 
-                        className="secondary"
-                    />
-                </div>
-                <h3>Zařazení</h3>
+                 <h3>Zařazení</h3>
                 <div className="category-section">
                     {!showNewCategory ? (
                         <div className="flex-row">
@@ -136,6 +107,35 @@ export const ProductForm = ({ onSubmit, categoryOptions, serverErrors, initialDa
                             />
                         </div>
                     )}
+                </div>
+            </div>
+            <div className="form-column">
+                <div className="tips-dynamic-section">
+                    <h3>Tipy k produktu</h3>
+                    {fields.map((field, index) => (
+                        <div key={field.id} className="dynamic-row">
+                            <Input
+                                label="Název rady"
+                                {...register(`tips.${index}.nameTip`)} 
+                            />
+                            <TextArea
+                                label="text rady"
+                                placeholder="Např. Zalévat ke kořenům..."
+                                {...register(`tips.${index}.text`)} 
+                            />
+                            <IconButton
+                                icon={CiTrash}                                     
+                                onClick={() => remove(index)}
+                                color="var(--danger-color)"
+                            />
+                        </div>
+                    ))}
+                    <Button 
+                        type="button" 
+                        text="+ Přidat další tip" 
+                        onClick={() => append({ nameTip: "", text: "" })} 
+                        className="secondary"
+                    />
                 </div>
                 <Error serverErrors={serverErrors} />
                 <Button 

@@ -27,3 +27,38 @@
   align-items: center;
   gap: 10px;
 }
+
+@media (max-width: 945px) {
+  .logout-container{
+    background-image: none;
+    background-color: var(--primary-color);
+  }
+}
+
+@media (max-width: 768px) {
+  .logout-container{
+    background-image: none;
+
+  }
+}
+
+@media (max-width: 480px) {
+  .logout-container {
+    min-height: 100vh;
+    height: auto;
+    padding: 20px;
+    background-image: none;
+  }
+
+  h1, h2 {
+    font-size: 1.5rem;
+    text-align: center;
+  }
+}
+
+@media (max-height: 500px) and (orientation: landscape) {
+  .logout-container {
+    height: auto;
+    padding: 50px 0;
+  }
+}

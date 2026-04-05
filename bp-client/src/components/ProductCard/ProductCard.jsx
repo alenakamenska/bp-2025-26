@@ -20,9 +20,9 @@ export default function ProductCard({ id, image, name, price, info, isOwner, onD
 
   return (
     <div className="product-card">
-      {image && (
-        <img src={image} alt={name} className="product-card-image" />
-      )}
+  
+        <img src={image || "https://res.cloudinary.com/dmzyuywuy/image/upload/v1774028116/i4fo794o2e10b2rawqap.png"} alt={name} className="product-card-image" />
+
       <div className="product-card-body">
         <h3 className="product-card-title">{name}</h3>
         <p className="product-info">{info}</p>

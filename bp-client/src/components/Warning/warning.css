@@ -1,17 +1,129 @@
-.warning {
-    padding: 1rem 1.5rem;
-    border-radius: 8px;
-    margin: 3rem auto;        
-    font-weight: bold;
-    max-width: 800px;
-    width: 90%;               
-    background-color: var(--warning-color);
-    border: 3px solid var(--secondary-color);
-    box-sizing: border-box;
-    text-align: center;       
-  }
+.garden-weather-card {
+  background: var(--background-color);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  margin: 20px 0;
+  border: 1px solid #eee;
+}
 
-  pre{
-    font-size: 20px;
-    white-space: pre-wrap;
+.weather-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  color: var(--primary-color);
+  font-size: 1.4rem;
+}
+
+.icon-alert {
+  color: var(--danger-color);
+}
+
+.temp-badge {
+  background: #f1f8e9;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  color: var(--primary-color);
+}
+
+.alerts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.alert-item {
+  padding: 12px 16px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.alert-item.danger {
+  background: #ffebee;
+  color: var(--danger-color);
+  border-left: 5px solid var(--danger-color);
+}
+
+.alert-item.warning {
+  background: #fff3e0;
+  color: var(--secondary-color);
+  border-left: 5px solid var(--secondary-color);
+}
+
+.alert-item.info {
+  background: #e3f2fd;
+  color: #1565c0;
+  border-left: 5px solid #1565c0;
+}
+
+.alert-item.success {
+  background: #f1f8e9;
+  color: var(--primary-color);
+  border-left: 5px solid var(--light-green);
+}
+.weather-divider {
+  border: 0;
+  border-top: 1px solid #eee;
+  margin: 15px 0;
+}
+
+.weather-days-grid {
+  display: flex;
+  justify-content: space-around;
+  gap: 15px;
+}
+
+.day-forecast {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #f9f9f9;
+  padding: 10px;
+  border-radius: 8px;
+  flex: 1;
+}
+
+.day-name {
+  font-weight: bold;
+  font-size: 0.85rem;
+  margin-bottom: 5px;
+  color: #555;
+}
+
+.day-temps {
+  display: flex;
+  gap: 6rem;
+  font-size: 1.1rem;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.temp-max {
+  color: var(--danger-color);
+  font-weight: 600;
+}
+
+.temp-min {
+  color: var(--primary-color); 
+}
+@media (max-width: 768px) {
+  .weather-days-grid {
+    flex-direction: column; 
+    gap: 10px;
   }
+}

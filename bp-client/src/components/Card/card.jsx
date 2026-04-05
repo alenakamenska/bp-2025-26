@@ -1,11 +1,13 @@
-import React from "react";
 import PropTypes from "prop-types";
 import "../Card/card.css";
 import { Button } from "../Button/Button";
 import { useNavigate } from "react-router-dom";
 
-export default function Card({ id, image, name, street, houseNumber, city, owner, isVerified }) {
+export default function Card({ id, image, name, street, houseNumber, city, owner, isVerified, onDelete }) {
   const navigate = useNavigate(); 
+  const imageSrc = image && image.trim() !== "" 
+    ? image 
+    : "https://res.cloudinary.com/dmzyuywuy/image/upload/v1774030317/wo3twta0gmtgf7y9bsq6.jpg";
 
   const fullAddress = street && houseNumber 
     ? `${street} ${houseNumber}, ${city}` 
@@ -15,10 +17,13 @@ export default function Card({ id, image, name, street, houseNumber, city, owner
     navigate(`/podnik/${id}`); 
   };
 
+  const handleDelete = () =>{
+        onDelete(id);
+  }
   return (
     <div className="card">
-      {image && (
-        <img src={image} alt={name} className="card-image" />
+      {imageSrc && (
+        <img src={imageSrc} alt={name} className="card-image" />
       )}
       <div className="card-body">
         <h3 className="card-title">
@@ -32,11 +37,18 @@ export default function Card({ id, image, name, street, houseNumber, city, owner
         <div className="card-actions">
           <Button text="více" variant="wheat" onClick={handleDetailClick} />
           {owner && (
+            <>
             <Button 
               text="spravovat" 
               variant="wheat" 
               onClick={() => navigate(`/sprava-podniku/${id}`)} 
             />
+            <Button
+              text="Smazat"
+              variant="danger"
+              onClick={handleDelete}
+              />
+            </>
           )}
         </div>
       </div>

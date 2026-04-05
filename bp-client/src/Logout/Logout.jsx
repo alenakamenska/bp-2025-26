@@ -1,6 +1,5 @@
 import React from "react";
 import "./Logout.css";
-import { useNavigate } from "react-router-dom"; 
 import { CiLogout } from "react-icons/ci";
 
 export const Logout = () => {
