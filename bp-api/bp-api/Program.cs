@@ -66,7 +66,7 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp",
-        policy => policy.WithOrigins("http://localhost:3000")
+        policy => policy.WithOrigins("https://bp-2025-26-8zie.vercel.app")
                         .AllowAnyMethod()
                         .AllowAnyHeader());
 });
