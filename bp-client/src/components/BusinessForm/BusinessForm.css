@@ -134,6 +134,9 @@ input:checked + .slider:before {
     margin: 0 10px;
 }
 
+.form-section-separator{
+    margin: 0.8rem 0;
+}
 
 @media (max-width: 768px) {
     .business-flex-form {

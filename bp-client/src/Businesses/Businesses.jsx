@@ -128,10 +128,8 @@ export const Business = () => {
                     </div>
                 </div>
             </aside>
-
             <main className="business-main-content">
                 <h2 className="page-title">Podniky</h2>
-                
                 {loading ? (
                     <Loading />
                 ) : (
@@ -154,7 +152,6 @@ export const Business = () => {
                                 <EmptyState title="Žádné podniky nebyly nalezeny" />
                             )}
                         </div>
-
                         {businesses.length > 0 && (
                             <div className="pagination">
                                 <Button 

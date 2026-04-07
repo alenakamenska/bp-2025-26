@@ -9,6 +9,7 @@ import { BusinessForm } from "../components/BusinessForm/BusinessForm";
 import { useAuthorization } from "../useAuthorization";
 import { toast } from "react-toastify";
 import Loading from "../components/Loading/Loading";
+import EmptyState from "../components/EmptyState/EmptyState";
 
 export const BusinessSettings = () => {
   const { id } = useParams();
@@ -241,22 +242,30 @@ export const BusinessSettings = () => {
         )}
         {activeTab === "products" && (
           <div className="products-list-section">
-            <h2>Seznam produktů</h2>
-            <div className="products-grid">
-              {products.map((p) => (
-                <ProductCard
-                  key={p.id}
-                  image={p.imageURL}
-                  name={p.name}
-                  id={p.id}
-                  price={p.price}
-                  category={p.category?.name}
-                  isOwner={true}
-                  onDelete={() => handleDeleteProduct(p.id)}
-                  onUpdate={() => navigate(`/upravit-produkt/${p.id}`)}
-                />
-              ))}
-            </div>
+            {products.length > 0 ? (
+              <>
+                <div className="section-header-flex">
+                  <h2>Seznam produktů</h2>
+                </div>
+                <div className="products-grid">
+                  {products.map((p) => (
+                    <ProductCard
+                      key={p.id}
+                      image={p.imageURL}
+                      name={p.name}
+                      id={p.id}
+                      price={p.price}
+                      category={p.category?.name}
+                      isOwner={true}
+                      onDelete={() => handleDeleteProduct(p.id)}
+                      onUpdate={() => navigate(`/upravit-produkt/${p.id}`)}
+                    />
+                  ))}
+                </div>
+              </>
+            ) : (
+              <EmptyState message="zkuste přidat nový produkt" />
+            )}
           </div>
         )}
       </div>

@@ -9,12 +9,14 @@ import Error from "../components/Error/Error";
 import { GoogleLogin } from '@react-oauth/google'; 
 import { toast } from "react-toastify";
 import { useNavigate, Link } from "react-router-dom";
+import Loading from "../components/Loading/Loading";
 
 export const Login = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
     const navigate = useNavigate();
     const [, dispatch] = useAuthContext();
     const [serverErrors, setServerErrors] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
     const API_BASE_URL = process.env.REACT_APP_API_URL;
 
     const handleLoginSuccess = (token) => {
@@ -42,17 +44,18 @@ export const Login = () => {
 
     const onGoogleSuccess = async (credentialResponse) => {
         setServerErrors([]);
+        setIsLoading(true); 
         try {
             const response = await axios.post(`${API_BASE_URL}/auth/google`, {
                 idToken: credentialResponse.credential,
                 selectedRole: "user" 
             });
             if (response.data.token) {
-                console.log("Google přihlášení úspěšné");
                 handleLoginSuccess(response.data.token);
             }
         } catch (error) {
             handleApiError(error);
+            setIsLoading(false);
         }
     };
 
@@ -99,12 +102,19 @@ export const Login = () => {
                 <Button variant="primary" type="submit" text="Přihlásit se"/>
                 <div className="separator">nebo</div>
                 <div className="google-btn-container">
-                    <GoogleLogin
-                        onSuccess={onGoogleSuccess}
-                        onError={() => setServerErrors([{ description: "Google přihlášení selhalo" }])}
-                        useOneTap
-                        use_fedcm_for_prompt={true}
-                    />
+                    {isLoading ? (
+                        <Loading/>
+                    ) : (
+                        <GoogleLogin
+                            onSuccess={onGoogleSuccess}
+                            onError={() => {
+                                setServerErrors([{ description: "Google přihlášení selhalo" }]);
+                                setIsLoading(false);
+                            }}
+                            useOneTap
+                            use_fedcm_for_prompt={true}
+                        />
+                    )}
                 </div>
             </form>
         </div>

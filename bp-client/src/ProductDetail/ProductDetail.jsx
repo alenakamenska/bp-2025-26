@@ -54,7 +54,7 @@ export const ProductDetail = () => {
     <div className="detail-main-content"> 
         <div className="product-detail-container">
             <div className="product-detail-left">
-                <img src={pImage} alt={pName} className="detail-image" />
+                <img src={pImage || "https://res.cloudinary.com/dmzyuywuy/image/upload/v1774028116/i4fo794o2e10b2rawqap.png"} alt={pName} className="detail-image" />
             </div>
             <div className="product-detail-right">
                 <span className="detail-category">{pCategory}</span>
@@ -92,7 +92,7 @@ export const ProductDetail = () => {
              <MapComponent lat={business.latitude} 
               lon={business.longitude} 
               businessName={business.name}
-              height={250}/>
+              height={300}/>
           </div>
         </div>
       </div>

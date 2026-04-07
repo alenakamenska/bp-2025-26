@@ -100,7 +100,7 @@ export const Home = () => {
           {loading ? (
             <Loading/>
           ) : (
-            <div className="home-grid">
+            <div className="businesses-grid">
               {businesses.length > 0 ? (
                 businesses.map((b) => (
                   <Card 
@@ -133,7 +133,7 @@ export const Home = () => {
           {loading ? (
             <Loading/>
           ) : (
-            <div className="home-grid">
+            <div className="businesses-grid">
               {products.length > 0 ? (
                 products.map((p) => (
                   <ProductCard 

@@ -5,6 +5,7 @@ import L from "leaflet";
 
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
+import EmptyState from "../EmptyState/EmptyState";
 
 let DefaultIcon = L.icon({
     iconUrl: icon,
@@ -17,9 +18,7 @@ L.Marker.prototype.options.icon = DefaultIcon;
 export const MapComponent = ({ lat, lon, businessName, height }) => {
     if (!lat || !lon) {
         return (
-            <div className="map-placeholder">
-                <p>Souřadnice pro tento podnik nejsou k dispozici</p>
-            </div>
+            <EmptyState title="Souřadnice podniku nejsou k dispozici" message=""/>
         );
     }
 
