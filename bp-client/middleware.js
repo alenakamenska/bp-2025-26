@@ -1,5 +1,3 @@
-import { NextResponse } from 'next/server';
-
 export async function middleware(req) {
   const url = new URL(req.url);
   const userAgent = req.headers.get('user-agent') || '';
