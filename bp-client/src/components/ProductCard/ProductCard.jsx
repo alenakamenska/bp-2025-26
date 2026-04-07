@@ -3,13 +3,10 @@ import PropTypes from "prop-types";
 import "../ProductCard/ProductCard.css";
 import { Button } from "../Button/Button";
 import { useNavigate } from "react-router-dom";
-// 1. Importujeme potřebné komponenty pro sdílení
 import { FacebookShareButton, FacebookIcon } from "react-share";
 
 export default function ProductCard({ id, image, name, price, info, isOwner, onDelete, onUpdate }) {
   const navigate = useNavigate();
-  
-  // 2. Definujeme absolutní URL pro sdílení
   const shareUrl = `${window.location.origin}/produkt/${id}`;
 
   const handleDetailClick = () => {
