@@ -152,7 +152,7 @@ export const Business = () => {
                                 <EmptyState title="Žádné podniky nebyly nalezeny" />
                             )}
                         </div>
-                        {businesses.length > 0 && (
+                        {businesses.length > 0 && totalPages > 1 && (
                             <div className="pagination">
                                 <Button 
                                     disabled={currentPage <= 1} 

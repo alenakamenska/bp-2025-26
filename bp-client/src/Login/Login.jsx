@@ -103,7 +103,7 @@ export const Login = () => {
                 <div className="separator">nebo</div>
                 <div className="google-btn-container">
                     {isLoading ? (
-                        <Loading/>
+                        <Loading message="Přihlašování"/>
                     ) : (
                         <GoogleLogin
                             onSuccess={onGoogleSuccess}

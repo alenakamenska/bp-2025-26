@@ -101,41 +101,42 @@ export const Products = () => {
             <main className="business-main-content">
                 <h2 className="page-title">Produkty</h2>
                 {loading ? (
-                    <Loading/>
+                    <Loading />
                 ) : (
                     <>
-                        <div className="businesses-grid">
-                            {products.map((p) => (
-                                <ProductCard
-                                    key={p.id}
-                                    image={p.imageURL}      
-                                    name={p.name}
-                                    id={p.id}
-                                    price={p.price}
-                                    info={p.info}
+                        {products.length > 0 ? (
+                            <div className="businesses-grid">
+                                {products.map((p) => (
+                                    <ProductCard
+                                        key={p.id}
+                                        image={p.imageURL}      
+                                        name={p.name}
+                                        id={p.id}
+                                        price={p.price}
+                                        info={p.info}
+                                    />
+                                ))}
+                            </div>
+                        ) : (
+                            <EmptyState title="Žádné produkty nebyly nalezeny" />
+                        )}
+                        {!loading && products.length > 0 && totalPages > 1 && (
+                            <div className="pagination">
+                                <Button 
+                                    disabled={currentPage <= 1} 
+                                    onClick={() => setCurrentPage(prev => prev - 1)}
+                                    text="Předchozí"
                                 />
-                            ))}
-                        </div>
-                        {products.length === 0 && (
-                            <EmptyState
-                                title="Žádné produkty nebyly nalezeny"
-                            />
+                                <span>Strana {currentPage} z {totalPages}</span>
+                                <Button 
+                                    disabled={currentPage >= totalPages} 
+                                    onClick={() => setCurrentPage(prev => prev + 1)}
+                                    text="Další"
+                                />
+                            </div>
                         )}
                     </>
                 )}
-                <div className="pagination">
-                    <Button 
-                        disabled={currentPage <= 1 || loading} 
-                        onClick={() => setCurrentPage(prev => prev - 1)}
-                        text="Předchozí"
-                    />
-                    <span>Strana {currentPage} z {totalPages}</span>
-                    <Button 
-                        disabled={currentPage >= totalPages || loading} 
-                        onClick={() => setCurrentPage(prev => prev + 1)}
-                        text="Další"
-                    />
-                </div>
             </main>
         </div>
     );
