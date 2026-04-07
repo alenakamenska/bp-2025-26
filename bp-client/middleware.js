@@ -47,5 +47,6 @@ export async function middleware(req) {
 }
 
 export const config = {
+  runtime: 'edge', 
   matcher: ['/produkt/:path*'], 
 };
