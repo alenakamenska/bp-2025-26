@@ -84,7 +84,9 @@ export const ProductForm = ({ onSubmit, categoryOptions, serverErrors, initialDa
                             <Select
                                 label="Kategorie"
                                 options={categoryOptions}
-                                {...register("categoryId", { required: !showNewCategory })}
+                                {...register("categoryId", { 
+                                    required: !showNewCategory ? "Kategorie je povinná" : false 
+                                })}
                                 error={errors.categoryId}
                             />
                             <Button
@@ -103,7 +105,10 @@ export const ProductForm = ({ onSubmit, categoryOptions, serverErrors, initialDa
                             <Button
                                 type="button"
                                 text="Zpět"
-                                onClick={() => setShowNewCategory(false)}
+                                onClick={() => {
+                                    setShowNewCategory(false);
+                                    setNewCategoryName("");
+                                }}
                             />
                         </div>
                     )}

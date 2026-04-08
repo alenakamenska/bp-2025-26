@@ -136,10 +136,10 @@ export const BusinessDetail = () => {
         </div>
         <div className="info-card">
           <h3>Kde nás najdete</h3>
-          {! business.street && business.houseNumber && business.city && (
-              <p className="address-text">
-                {business.street} {business.houseNumber}, {business.city}
-              </p>
+         {business.street && business.houseNumber && business.city && (
+            <p className="address-text">
+              {business.street} {business.houseNumber}, {business.city}
+            </p>
           )}
           <div className="map-box">
               <MapComponent 

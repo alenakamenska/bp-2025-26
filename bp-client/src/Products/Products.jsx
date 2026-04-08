@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import "./Products.css"; 
 import axios from "axios"; 
 import { CiSearch, CiFilter, CiSliderHorizontal } from "react-icons/ci"; 
@@ -37,26 +37,23 @@ export const Products = () => {
             .catch(err => console.error("Chyba kategorií:", err));
     }, [API_BASE_URL]);
 
-    useEffect(() => {
-        const fetchProducts = async () => {
-            setLoading(true);
-            try {
-                const url = `${API_BASE_URL}/Products?searchTerm=${searchTerm}&category=${selectedCategory}&sortOrder=${sortOrder}&page=${currentPage}&pageSize=15`;
-                const response = await axios.get(url);
-                setProducts(response.data.items || []);
-                setTotalPages(response.data.totalPages || 1);
-            } catch (err) {
-                console.error("Chyba při komunikaci s API:", err);
-            } finally {
-                setLoading(false);
-            }
-        };
-        const delayDebounceFn = setTimeout(() => {
-            fetchProducts();
-        }, 300);
-
-        return () => clearTimeout(delayDebounceFn);
+    const fetchProducts = useCallback(async () => {
+        setLoading(true);
+        try {
+            const url = `${API_BASE_URL}/Products?searchTerm=${searchTerm}&category=${selectedCategory}&sortOrder=${sortOrder}&page=${currentPage}&pageSize=15`;
+            const response = await axios.get(url);
+            setProducts(response.data.items || []);
+            setTotalPages(response.data.totalPages || 1);
+        } catch (err) {
+            console.error("Chyba při komunikaci s API:", err);
+        } finally {
+            setLoading(false);
+        }
     }, [searchTerm, selectedCategory, sortOrder, currentPage, API_BASE_URL]);
+
+    useEffect(() => {
+        fetchProducts();
+    }, [fetchProducts]);
 
     const handleFilterChange = (setter) => (e) => {
         setter(e.target.value);
@@ -80,63 +77,79 @@ export const Products = () => {
                 </div>
                 <div className="sidebar-section">
                     <h3>Filtrace</h3>
-                    <div className="filter-group">
-                        <label><CiFilter /> Kategorie</label>
-                        <Select 
-                            options={categoryOptions}
-                            value={selectedCategory}
-                            onChange={handleFilterChange(setSelectedCategory)}
-                        />
-                    </div>
-                    <div className="filter-group">
-                        <label><CiSliderHorizontal /> Řazení</label>
-                        <Select 
-                            value={sortOrder} 
-                            options={sortOptions}
-                            onChange={handleFilterChange(setSortOrder)}
-                        />
+                    <div className="filter-menu">
+                        <div className="filter-group">
+                            <label><CiFilter /> Kategorie</label>
+                            <Select 
+                                options={categoryOptions}
+                                value={selectedCategory}
+                                onChange={handleFilterChange(setSelectedCategory)}
+                            />
+                        </div>
+                        <div className="filter-group">
+                            <label><CiSliderHorizontal /> Řazení</label>
+                            <Select 
+                                value={sortOrder} 
+                                options={sortOptions}
+                                onChange={handleFilterChange(setSortOrder)}
+                            />
+                        </div>
                     </div>
                 </div>
             </aside>
             <main className="business-main-content">
-                <h2 className="page-title">Produkty</h2>
-                {loading ? (
-                    <Loading />
-                ) : (
-                    <>
-                        {products.length > 0 ? (
-                            <div className="businesses-grid">
-                                {products.map((p) => (
-                                    <ProductCard
-                                        key={p.id}
-                                        image={p.imageURL}      
-                                        name={p.name}
-                                        id={p.id}
-                                        price={p.price}
-                                        info={p.info}
-                                    />
-                                ))}
-                            </div>
-                        ) : (
-                            <EmptyState title="Žádné produkty nebyly nalezeny" />
-                        )}
-                        {!loading && products.length > 0 && totalPages > 1 && (
-                            <div className="pagination">
-                                <Button 
-                                    disabled={currentPage <= 1} 
-                                    onClick={() => setCurrentPage(prev => prev - 1)}
-                                    text="Předchozí"
-                                />
-                                <span>Strana {currentPage} z {totalPages}</span>
-                                <Button 
-                                    disabled={currentPage >= totalPages} 
-                                    onClick={() => setCurrentPage(prev => prev + 1)}
-                                    text="Další"
-                                />
-                            </div>
-                        )}
-                    </>
-                )}
+                <header className="business-hero">
+                    <div className="hero-overlay">
+                        <h1 className="business-hero-title">Nabídka produktů</h1>
+                    </div>
+                </header>
+                <div className="content-container">
+                    {loading ? (
+                        <div className="status-wrapper">
+                            <Loading />
+                        </div>
+                    ) : (
+                        <>
+                            {products.length > 0 ? (
+                                <div className="results-wrapper">
+                                    <div className="businesses-grid">
+                                        {products.map((p) => (
+                                            <ProductCard
+                                                key={p.id}
+                                                image={p.imageURL}      
+                                                name={p.name}
+                                                id={p.id}
+                                                price={p.price}
+                                                info={p.info}
+                                            />
+                                        ))}
+                                    </div>
+                                    {totalPages > 1 && (
+                                        <div className="pagination">
+                                            <Button 
+                                                disabled={currentPage <= 1} 
+                                                onClick={() => setCurrentPage(prev => prev - 1)}
+                                                text="Předchozí"
+                                            />
+                                            <span className="pagination-info">
+                                                Strana <strong>{currentPage}</strong> z {totalPages}
+                                            </span>
+                                            <Button 
+                                                disabled={currentPage >= totalPages} 
+                                                onClick={() => setCurrentPage(prev => prev + 1)}
+                                                text="Další"
+                                            />
+                                        </div>
+                                    )}
+                                </div>
+                            ) : (
+                                <div className="status-wrapper">
+                                    <EmptyState title="Žádné produkty nebyly nalezeny" />
+                                </div>
+                            )}
+                        </>
+                    )}
+                </div>
             </main>
         </div>
     );

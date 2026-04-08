@@ -19,7 +19,7 @@ export default async function handler(req) {
           <meta charset="utf-8">
           <meta property="og:title" content="${data.name}" />
           <meta property="og:description" content="${data.info || ''}" />
-          <meta property="og:image" content="${data.imageURL}" />
+          <meta property="og:image" content="${data.imageURL || "https://res.cloudinary.com/dmzyuywuy/image/upload/v1774028116/i4fo794o2e10b2rawqap.png" }" />
           <meta property="og:url" content="${url.href}" />
           <meta property="og:type" content="website" />
           <meta name="twitter:card" content="summary_large_image" />

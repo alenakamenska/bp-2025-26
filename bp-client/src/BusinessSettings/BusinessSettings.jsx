@@ -140,6 +140,10 @@ export const BusinessSettings = () => {
         catId = catRes.data.id;
         setCategories((prev) => [...prev, catRes.data]);
       }
+      if (!catId) {
+            setServerErrors(["Prosím vyberte nebo zadejte kategorii"]);
+            return false;
+      }
       const productPayload = {
         Name: data.nameProduct,
         Info: data.infoProduct,
@@ -173,6 +177,7 @@ export const BusinessSettings = () => {
         await Promise.all(tipsPromises);
       }
       toast.success("Produkt byl úspěšně uložen");
+      navigate("/sortiment")
       fetchBusinessProducts();
       return true;
     } catch (error) {

@@ -61,7 +61,7 @@ export const ProductDetail = () => {
                 <h1 className="detail-title">{pName}</h1>
                 <div className="detail-description">
                 <h3>O produktu</h3>
-                <p>{pInfo}</p>
+                <p>{pInfo || "K produktu nebyl přidán žádný popis"}</p>
                 </div>
             </div>
         </div>
@@ -87,7 +87,11 @@ export const ProductDetail = () => {
         </div>
         <div className="address">
           <h3>Kde nás najdete</h3>
-          <p>{business.street} {business.houseNumber}, {business.city}</p>
+          {business.street && business.houseNumber && business.city && (
+            <p className="address-text">
+              {business.street} {business.houseNumber}, {business.city}
+            </p>
+          )}
           <div className="map-box">
              <MapComponent lat={business.latitude} 
               lon={business.longitude} 
