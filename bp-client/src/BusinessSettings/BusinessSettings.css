@@ -96,8 +96,15 @@
     }
 }
 
-@media (max-width: 602px) {
+@media (max-width: 609px) {
     .products-grid{
         margin: 20px 4rem;
     }
 }
+
+@media (max-width: 495px) {
+    .products-grid{
+        margin: 0;
+    }
+}
+
