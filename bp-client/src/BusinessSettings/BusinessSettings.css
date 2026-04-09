@@ -67,12 +67,12 @@
 }
 
 .products-grid{
-    margin: 10px 50px;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 2rem;
     padding: 20px;
     justify-content: center;
+    align-items: center;
 }
 
 @keyframes fadeIn {
@@ -93,5 +93,11 @@
     }
     .opening-hours-section, .textarea-full {
         grid-column: span 1;
+    }
+}
+
+@media (max-width: 602px) {
+    .products-grid{
+        margin: 20px 4rem;
     }
 }

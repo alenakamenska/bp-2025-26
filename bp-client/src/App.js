@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Home } from "./Home/Home";
 import { FrontLayout } from "./components/layout";
-import "./colors.css"
+import "./colors.css";
 import { Login } from "./Login/Login";
 import { Logout } from "./Logout/Logout";
 import {Register} from "./Register/Register"

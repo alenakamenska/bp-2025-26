@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import ProductCard from "../components/ProductCard/ProductCard";
 import { MapComponent } from "../components/Map/Map";
 import EmptyState from "../components/EmptyState/EmptyState";
-import Loading from "../components/Loading/Loading"; // Předpokládám, že máš Loading komponentu
+import Loading from "../components/Loading/Loading"; 
 
 export const BusinessDetail = () => {
   const [business, setBusiness] = useState(null);
@@ -102,7 +102,7 @@ export const BusinessDetail = () => {
           <div className="hero-image-side">
             <div className="image-frame">
               <img 
-                src={business.imageURL || "https://res.cloudinary.com/dmzyuywuy/image/upload/v1774030317/wo3twta0gmtgf7y9bsq6.jpg"} 
+                src={business.imageURL || "https://res.cloudinary.com/dmzyuywuy/image/upload/f_auto,q_auto,w_1000/v1774030317/wo3twta0gmtgf7y9bsq6.jpg"} 
                 alt={business.name} 
               />
             </div>

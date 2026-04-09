@@ -29,7 +29,11 @@ export const uploadImage = async (file, onProgress) => {
   }
 };
 
-export const getOptimizedUrl = (url, width = 1200) => {
-  if (!url || !url.includes("cloudinary")) return url;
-  return url.replace("/upload/", `/upload/f_auto,q_auto,w_${width}/`);
+export const getOptimizedUrl = (url, width = 1200, height = null) => {
+  if (!url || !url.includes("cloudinary.com")) return url;
+  let transformations = `f_auto,q_auto,w_${width}`;
+  if (height) {
+    transformations += `,h_${height},c_fill`;
+  }
+  return url.replace("/upload/", `/upload/${transformations}/`);
 };

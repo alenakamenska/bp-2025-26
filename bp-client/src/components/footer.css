@@ -1,19 +1,79 @@
-footer.footer {
-    background-color: var(--primary-color);
-    color: var(--background-color);
-    text-align: center;
-    padding: 15px 10px;
-    position: relative;
-    clear: both;
-    margin-top: auto;
+.footer {
+  background-color: var(--primary-color); 
+  color: #ffffff;
+  padding: 40px 20px 20px 20px;
 }
-    
-footer.footer a {
-    text-decoration: none;
-    margin: 0 8px;
-    color:var(--background-color);
+
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap; 
+  justify-content: space-between;
+  gap: 30px;
 }
-    
-footer.footer a:hover {
-    text-decoration: underline;
+
+.footer-section {
+  flex: 1;
+  min-width: 200px; 
+}
+
+.footer-section h4 {
+  color: var(--background-color); 
+  margin-bottom: 15px;
+  font-size: 1.1rem;
+}
+
+.footer-section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-section ul li {
+  margin-bottom: 10px;
+}
+
+.footer-section a {
+  color: #ccc;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.footer-section a:hover {
+  color: var(--background-color);
+}
+
+.footer-text {
+  margin-bottom: 20px;
+  line-height: 1.5;
+  color: #ccc;
+}
+
+.footer-cta {
+  margin-top: 15px;
+}
+
+.highlight-link {
+  display: inline-block; 
+  font-weight: bold;
+  color: var(--secondary-color);
+  border: 2px solid var(--secondary-color); 
+  padding: 10px 20px;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+}
+
+.highlight-link:hover {
+  background-color: var(--secondary-color);
+  color: var(--primary-color); 
+  text-decoration: none;
+}
+
+.footer-bottom {
+  text-align: center;
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid #333;
+  color: #777;
+  font-size: 0.9rem;
 }
