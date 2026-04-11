@@ -11,8 +11,8 @@ export const FileInput = ({ onUploadSuccess, label, initialImage = "" }) => {
     const handleFileChange = async (e) => {
         const file = e.target.files[0];
         if (!file) return;
-        if (file.size > 5 * 1024 * 1024) {
-            alert("Soubor je příliš velký (max 5 MB)");
+        if (file.size > 10 * 1024 * 1024) {
+            alert("Soubor je příliš velký (max 10 MB)");
             return;
         }
         setIsUploading(true);
@@ -62,7 +62,7 @@ export const FileInput = ({ onUploadSuccess, label, initialImage = "" }) => {
                     <div className="empty-upload-state">
                         <span className="upload-icon">📁</span>
                         <span className="upload-text">Klikněte pro výběr obrázku</span>
-                        <span className="upload-subtext">Max. velikost 5 MB</span>
+                        <span className="upload-subtext">Max. velikost 10 MB</span>
                     </div>
                 )}
             </label>

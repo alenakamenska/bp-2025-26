@@ -12,7 +12,7 @@ export const Footer = () => {
             </p>
             <div className="footer-cta">
                 <a 
-                href="https://forms.gle/tvoje-id-formularu" 
+                href="https://docs.google.com/forms/d/e/1FAIpQLSdhagxL0vmmIN1IGzCdRssDre2UvyvBu5Fv8Yn2qTRGhd7D8A/viewform?usp=publish-editor" 
                 target="_blank" 
                 rel="noopener noreferrer" 
                 className="highlight-link"
