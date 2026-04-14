@@ -56,6 +56,17 @@ namespace bp_api.Controllers
         [Authorize]
         public async Task<IActionResult> PutUser([FromBody] UserDTO dto)
         {
+            string currentIdp = "Local";
+            var authHeader = Request.Headers["Authorization"].ToString();
+
+            if (!string.IsNullOrEmpty(authHeader) && authHeader.StartsWith("Bearer "))
+            {
+                var token = authHeader.Substring("Bearer ".Length).Trim();
+                var handler = new JwtSecurityTokenHandler();
+                var jwtToken = handler.ReadJwtToken(token);
+
+                currentIdp = jwtToken.Claims.FirstOrDefault(c => c.Type == "idp")?.Value ?? "Local";
+            }
             var currentUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
 
             if (currentUserId == null) return Unauthorized("Uživatel není přihlášen");
@@ -78,7 +89,7 @@ namespace bp_api.Controllers
 
             if (!result.Succeeded) return BadRequest(result.Errors);
 
-            var newToken = await GenerateJwtToken(user);
+            var newToken = await GenerateJwtToken(user, currentIdp);
 
             return Ok(new
             {
