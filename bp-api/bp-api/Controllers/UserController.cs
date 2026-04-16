@@ -73,11 +73,20 @@ namespace bp_api.Controllers
 
             var user = await _userManager.FindByIdAsync(currentUserId);
             if (user == null) return NotFound("Uživatel nebyl nalezen");
-
-            user.Email = dto.Email;
-            user.UserName = dto.Email;
-            user.PhoneNumber = dto.PhoneNumber;
-
+            if (currentIdp == "Google")
+            {
+                if (user.Email != dto.Email)
+                {
+                    return BadRequest(new { message = "U účtu propojeného s Google nelze měnit e-mailovou adresu" });
+                }
+                user.PhoneNumber = dto.PhoneNumber;
+            }
+            else
+            {
+                user.Email = dto.Email;
+                user.UserName = dto.Email;
+                user.PhoneNumber = dto.PhoneNumber;
+            }
             if (!string.IsNullOrEmpty(dto.Role))
             {
                 var currentRoles = await _userManager.GetRolesAsync(user);
