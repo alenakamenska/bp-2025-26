@@ -9,10 +9,11 @@ export const PasswordReset = () => {
     const [state] = useAuthContext();
     const { register, handleSubmit, reset, formState: { errors, isSubmitting }, watch } = useForm();
     const [message, setMessage] = useState("");
+    const API_BASE_URL = process.env.REACT_APP_API_URL;
 
     const onSubmit = async (data) => {
         try {
-            await axios.post("https://localhost:7014/api/Users/change-password", {
+            await axios.post(`${API_BASE_URL}/Users/change-password`, { 
                 oldPassword: data.oldPassword,
                 newPassword: data.newPassword
             }, {
