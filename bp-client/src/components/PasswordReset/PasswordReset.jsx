@@ -7,7 +7,7 @@ import { useAuthContext } from "../../Providers/AuthProvider";
 
 export const PasswordReset = () => {
     const [state] = useAuthContext();
-    const { register, handleSubmit, reset, formState: { errors }, watch } = useForm();
+    const { register, handleSubmit, reset, formState: { errors, isSubmitting }, watch } = useForm();
     const [message, setMessage] = useState("");
 
     const onSubmit = async (data) => {
@@ -55,7 +55,7 @@ export const PasswordReset = () => {
                     })}
                     error={errors.confirmPassword}
                 />
-                <Button type="submit" text="Aktualizovat heslo" className="primary" />
+                <Button type="submit" text="Aktualizovat heslo" className="primary" disabled={isSubmitting}/>
                 {message && <p className="status-message">{message}</p>}
             </form>
         </div>

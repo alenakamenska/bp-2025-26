@@ -19,7 +19,7 @@
 .sidebar-section h3 {
     margin-bottom: 15px;
     font-size: 1.2rem;
-    color: white; 
+    color: var(--secondary-color); 
 }
 
 .search-box {

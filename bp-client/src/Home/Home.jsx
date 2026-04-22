@@ -21,8 +21,8 @@ export const Home = () => {
       setLoading(true);
       try {
        const [businessesRes, productsRes] = await Promise.all([
-          axios.get(`${API_BASE_URL}/Businesses?pageSize=4`),
-          axios.get(`${API_BASE_URL}/Products?pageSize=4`)
+          axios.get(`${API_BASE_URL}/Businesses?pageSize=3`),
+          axios.get(`${API_BASE_URL}/Products?pageSize=3`)
         ]);   
         setBusinesses(businessesRes.data.items || businessesRes.data);
         setProducts(productsRes.data.items || productsRes.data);

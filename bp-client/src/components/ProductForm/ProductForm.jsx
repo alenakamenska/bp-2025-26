@@ -14,7 +14,7 @@ export const ProductForm = ({ onSubmit, categoryOptions, serverErrors, initialDa
     const [showNewCategory, setShowNewCategory] = useState(false);
     const [newCategoryName, setNewCategoryName] = useState("");
 
-    const { register, handleSubmit, control, watch, setValue, reset, formState: { errors } } = useForm({
+    const { register, handleSubmit, control, watch, setValue, reset, formState: { errors, isSubmitting } } = useForm({
         defaultValues: initialData || {
             nameProduct: "",
             price: "",
@@ -53,7 +53,13 @@ export const ProductForm = ({ onSubmit, categoryOptions, serverErrors, initialDa
     return (
         <form onSubmit={handleSubmit(handleInternalSubmit)} className="business-flex-form">
             <div className="form-column">
-                <Input
+                <FileInput
+                    label="Obrázek produktu"
+                    initialImage={watch("imageProductURL")}
+                    onUploadSuccess={(url) => setValue("imageProductURL", url)} 
+                />
+                <input type="hidden" {...register("imageProductURL")} />
+                 <Input
                     label="Název produktu"
                     {...register("nameProduct", { required: "Název produktu je povinný" })}
                     error={errors.nameProduct}
@@ -65,19 +71,15 @@ export const ProductForm = ({ onSubmit, categoryOptions, serverErrors, initialDa
                     {...register("price", { required: "Cena je povinná" })}
                     error={errors.price}
                 />
-                <FileInput
-                    label="Obrázek produktu"
-                    initialImage={watch("imageProductURL")}
-                    onUploadSuccess={(url) => setValue("imageProductURL", url)} 
-                />
-                <input type="hidden" {...register("imageProductURL")} />
                 <TextArea
                     label="Popis produktu"
                     placeholder="Napište podrobnosti o produktu..."
                     {...register("infoProduct")}
                     error={errors.infoProduct}
                 />
-                 <h3>Zařazení</h3>
+            </div>
+            <div className="form-column">
+                <h3>Zařazení</h3>
                 <div className="category-section">
                     {!showNewCategory ? (
                         <div className="flex-row">
@@ -113,8 +115,6 @@ export const ProductForm = ({ onSubmit, categoryOptions, serverErrors, initialDa
                         </div>
                     )}
                 </div>
-            </div>
-            <div className="form-column">
                 <div className="tips-dynamic-section">
                     <h3>Tipy k produktu</h3>
                     {fields.map((field, index) => (
@@ -147,6 +147,7 @@ export const ProductForm = ({ onSubmit, categoryOptions, serverErrors, initialDa
                     type="submit" 
                     className="primary" 
                     text={initialData ? "Aktualizovat produkt" : "Uložit produkt"} 
+                    disabled={isSubmitting}
                 />
             </div>
         </form>

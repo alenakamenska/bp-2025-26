@@ -10,7 +10,7 @@ import Loading from "../components/Loading/Loading";
 
 export const UserUpdate = () => {
     const [state, dispatch] = useAuthContext();
-    const { register, handleSubmit, reset, formState: { errors } } = useForm();
+    const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm();
     const [loading, setLoading] = useState(true);
     const [serverError, setServerError] = useState("");
     const API_BASE_URL = process.env.REACT_APP_API_URL;
@@ -87,7 +87,7 @@ export const UserUpdate = () => {
                     {...register("role", { required: "Role je povinná" })}
                 />
                 <div style={{ marginTop: "20px" }}>
-                    <Button type="submit" text="Uložit změny" className="primary" />
+                    <Button type="submit" text="Uložit změny" className="primary" disabled={isSubmitting}/>
                 </div>
             </form>
         </div>

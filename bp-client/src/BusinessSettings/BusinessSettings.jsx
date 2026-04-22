@@ -121,8 +121,9 @@ export const BusinessSettings = () => {
       await axios.put(`${API_BASE_URL}/OpeningHours/bulk`, hoursPayload, {
         headers: { Authorization: `Bearer ${state.accessToken}` },
       });
-      alert("Profil podniku byl úspěšně aktualizován");
+      toast.success("Podnik byl úspěšně aktualizován")
     } catch (error) {
+      toast.error("Produkt se nepodařilo uložit")
       setServerErrors(["Nepodařilo se uložit změny podniku"]);
     }
   };

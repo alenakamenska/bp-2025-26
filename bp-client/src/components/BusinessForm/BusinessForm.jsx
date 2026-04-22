@@ -9,7 +9,7 @@ import { AddColleague } from "../AddColeague/AddColleague";
 
 export const BusinessForm = ({ onSubmit, accessToken, initialData = null }) => {
     const API_BASE_URL = process.env.REACT_APP_API_URL;
-    const { register, control, handleSubmit, setValue, watch, reset, formState: { errors } } = useForm({
+    const { register, control, handleSubmit, setValue, watch, reset, formState: { errors, isSubmitting } } = useForm({
         defaultValues: initialData || {
             name: "",
             city: "",
@@ -66,6 +66,12 @@ export const BusinessForm = ({ onSubmit, accessToken, initialData = null }) => {
         <>
         <form onSubmit={handleSubmit(onSubmit)} className="business-flex-form">
             <div className="form-column">
+                <FileInput 
+                    label="Logo podniku"
+                    initialImage={watch("imageURL")}
+                    onUploadSuccess={(url) => setValue("imageURL", url)} 
+                />
+                <input type="hidden" {...register("imageURL")} />
                 <Input 
                     label="IČO" 
                     {...register("ICO", { 
@@ -88,12 +94,6 @@ export const BusinessForm = ({ onSubmit, accessToken, initialData = null }) => {
                     {...register("info")} 
                     rows="4" 
                 />
-                <FileInput 
-                    label="Logo zahradnictví"
-                    initialImage={watch("imageURL")}
-                    onUploadSuccess={(url) => setValue("imageURL", url)} 
-                />
-                <input type="hidden" {...register("imageURL")} />
             </div>
             <div className="form-column">
                 <h3>Otevírací hodiny</h3>
@@ -139,6 +139,7 @@ export const BusinessForm = ({ onSubmit, accessToken, initialData = null }) => {
                         type="submit" 
                         text={initialData ? "Aktualizovat profil" : "Uložit nový podnik"} 
                         className="primary-btn" 
+                        disabled={isSubmitting}
                     />
                 </div>
             </div>

@@ -74,7 +74,7 @@ export const EditTip = () => {
                 headers: { Authorization: `Bearer ${state.accessToken}` }
             });
             toast.success("rada byla úspěšně aktualizována")
-            navigate("/rady");
+            navigate(-1);
         } catch (error) {
             console.error("Chyba:", error.response?.data || error.message);
             toast.error("Nepodařilo se uložit radu")
