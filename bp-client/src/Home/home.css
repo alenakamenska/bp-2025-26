@@ -62,11 +62,11 @@ h2 {
 }
 
 .home-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));  
-  gap: 20px;
-  width: 100%;
-  justify-content: center; 
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 30px;
+    max-width: 1400px;
+    margin: 0 auto;
 }
 
 .parallax-divider {
@@ -117,9 +117,6 @@ h2 {
 }
 
 @media (max-width: 1024px) {
-  .home-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
   h1 { font-size: 50px; }
   h2 { font-size: 40px; }
 }
@@ -129,10 +126,6 @@ h2 {
   h1 { font-size: 36px; }
   h2 { font-size: 32px; }
   .container { padding: 40px 15px; }
-  .home-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
-  }
   .parallax-divider {
     height: 250px;
     background-attachment: scroll; 
@@ -141,10 +134,33 @@ h2 {
 }
 
 @media (max-width: 590px) {
-  .home-grid {
-    grid-template-columns: repeat(1, 1fr);
-  }
   h1 { font-size: 28px; }
+}
+
+@media (min-width: 500px) {
+    .home-grid {
+        grid-template-columns: repeat(1, 1fr);
+        padding: 0 5rem;
+    }
+}
+
+@media (min-width: 620px) {
+    .home-grid {
+        grid-template-columns: repeat(2, 1fr);
+        padding: 0rem;
+    }
+
+}
+@media (min-width: 950px) {
+    .home-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (min-width: 1600px) {
+    .home-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
 }
 
 .loading-container {

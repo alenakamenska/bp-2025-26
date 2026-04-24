@@ -18,6 +18,9 @@ export const UserUpdate = () => {
         { value: "User", label: "Zákazník" },
         { value: "Business", label: "Zahradnictví/Květinářství" }
     ];
+    const isGoogleUser = state.profile?.idp === "Google" || 
+                       state.profile?.iss?.includes("google") || 
+                       state.profile?.sub?.startsWith("google-oauth2");
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -74,10 +77,16 @@ export const UserUpdate = () => {
                     label="Email" 
                     {...register("email", { required: "Email je povinný" })} 
                     error={errors.email} 
+                    disabled={isGoogleUser}
                 />
-                <Input 
+              <Input 
                     label="Telefonní číslo" 
-                    {...register("phoneNumber")} 
+                    {...register("phoneNumber", {
+                        pattern: {
+                            value: /^(\+?\d{1,3})?\s?\d{3}\s?\d{3}\s?\d{3}$/,
+                            message: "Zadejte platné telefonní číslo"
+                        }
+                    })} 
                     error={errors.phoneNumber} 
                 />
                  <Select

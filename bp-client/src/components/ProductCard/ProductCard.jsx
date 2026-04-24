@@ -4,8 +4,9 @@ import "../ProductCard/ProductCard.css";
 import { Button } from "../Button/Button";
 import { useNavigate } from "react-router-dom";
 import { FacebookShareButton, FacebookIcon } from "react-share";
+import { ProductTicket } from "../ProductTicket/ProductTicket";
 
-export default function ProductCard({ id, image, name, price, info, isOwner, onDelete, onUpdate }) {
+export default function ProductCard({ product, id, image, name, price, info, isOwner, onDelete, onUpdate }) {
   const navigate = useNavigate();
   const shareUrl = `${window.location.origin}/produkt/${id}`;
 
@@ -41,6 +42,7 @@ export default function ProductCard({ id, image, name, price, info, isOwner, onD
           <div className="product-card-footer owner-actions">
             <Button text="smazat" variant="danger" onClick={handleDelete} />
             <Button text="upravit" variant="secondary" onClick={handleUpdate} />
+            <ProductTicket product={product} />
             <div className="product-card-share-badge">
               <FacebookShareButton url={shareUrl} quote={`Koukni na ${name}!`}>
                 <FacebookIcon size={32} round />

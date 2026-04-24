@@ -36,18 +36,20 @@ export default function Card({ id, image, name, street, houseNumber, city, owner
         <p className="card-address">{fullAddress}</p>
         <div className="card-actions">
           <Button text="více" variant="wheat" onClick={handleDetailClick} />
+        </div>
+        <div className="card-actions">
           {owner && (
             <>
-            <Button 
-              text="spravovat" 
-              variant="wheat" 
-              onClick={() => navigate(`/sprava-podniku/${id}`)} 
-            />
             <Button
               text="Smazat"
               variant="danger"
               onClick={handleDelete}
               />
+            <Button 
+              text="spravovat" 
+              variant="secondary" 
+              onClick={() => navigate(`/sprava-podniku/${id}`)} 
+            />
             </>
           )}
         </div>

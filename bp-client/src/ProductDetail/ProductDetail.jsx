@@ -67,7 +67,9 @@ export const ProductDetail = () => {
         </div>
         <div className="detail-actions">
             <Button text="← Zpět do nabídky" variant="wheat" onClick={() => navigate(-1)} />
-            <div className="detail-price">{pPrice} Kč</div>
+            <div className="detail-price">
+            {pPrice > 0 ? `${pPrice} Kč` : "Zdarma"}
+          </div>
         </div>
     </div>
     <h2 className="seller-title">Kde tento produkt koupíte?</h2>

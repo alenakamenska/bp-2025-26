@@ -79,8 +79,8 @@ export const Home = () => {
               <h2>O portále</h2>
               <p>
                 Portál slouží podnikům k jednoduché propagaci jejich sortimentu. 
-                Pouzhým vyplněním formuláře získají stránku s informacemi o jejich podniku.
-                Návštěvníci je pak mohou jednodušše najít včetně sortiemntu.
+                Pouhým vyplněním formuláře získají stránku s informacemi o jejich podniku.
+                Návštěvníci je pak mohou jednoduše najít včetně sortiemntu.
               </p>
             </div>
             <div className="about-benefits">
@@ -100,7 +100,7 @@ export const Home = () => {
           {loading ? (
             <Loading/>
           ) : (
-            <div className="businesses-grid">
+            <div className="home-grid">
               {businesses.length > 0 ? (
                 businesses.map((b) => (
                   <Card 
@@ -133,7 +133,7 @@ export const Home = () => {
           {loading ? (
             <Loading/>
           ) : (
-            <div className="businesses-grid">
+            <div className="home-grid">
               {products.length > 0 ? (
                 products.map((p) => (
                   <ProductCard 
