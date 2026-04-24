@@ -10,6 +10,7 @@ import { useAuthorization } from "../useAuthorization";
 import { toast } from "react-toastify";
 import Loading from "../components/Loading/Loading";
 import EmptyState from "../components/EmptyState/EmptyState";
+import { Button } from "../components/Button/Button";
 
 export const BusinessSettings = () => {
   const { id } = useParams();
@@ -125,6 +126,31 @@ export const BusinessSettings = () => {
     } catch (error) {
       toast.error("Produkt se nepodařilo uložit")
       setServerErrors(["Nepodařilo se uložit změny podniku"]);
+    }
+  };
+
+  const handleExportCSV = async (businessId, token) => {
+    try {
+        const response = await axios.get(
+            `${API_BASE_URL}/Products/${businessId}/export-csv`, 
+            {
+                headers: { Authorization: `Bearer ${token}` },
+                responseType: 'blob', 
+            }
+        );
+        const blob = new Blob([response.data], { type: 'text/csv;charset=utf-8;' });
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', `produkty_export.csv`);
+        document.body.appendChild(link);
+        link.click();
+        link.parentNode.removeChild(link);
+        window.URL.revokeObjectURL(url);
+        toast.success("CSV soubor byl úspěšně stažen");
+    } catch (error) {
+        console.error("Export error:", error);
+        toast.error("Nepodařilo se vygenerovat soubor");
     }
   };
 
@@ -252,7 +278,10 @@ export const BusinessSettings = () => {
               <>
                 <div className="section-header-flex">
                   <h2>Seznam produktů</h2>
-                </div>
+                  </div>
+                  <div className="bussiness-products-action">
+                    <Button text="Stáhnout soubor s produkty ve formátu CSV" onClick={() => handleExportCSV(id, state.accessToken)}/>                
+                  </div>
                 <div className="products-grid">
                   {products.map((p) => (
                     <ProductCard
@@ -265,6 +294,7 @@ export const BusinessSettings = () => {
                       isOwner={true}
                       onDelete={() => handleDeleteProduct(p.id)}
                       onUpdate={() => navigate(`/upravit-produkt/${p.id}`)}
+                      product={p}
                     />
                   ))}
                 </div>

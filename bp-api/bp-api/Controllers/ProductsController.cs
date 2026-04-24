@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace bp_api.Controllers
@@ -189,6 +190,40 @@ namespace bp_api.Controllers
 
             return Ok(products);
 
+        }
+
+        [HttpGet("{businessId}/export-csv")]
+        public async Task<IActionResult> ExportProductsToCsv(int businessId)
+        {
+            var products = await _context.Products
+                .Where(p => p.BusinessId == businessId)
+                .ToListAsync();
+
+            if (products == null || !products.Any())
+                return NotFound("Žádné produkty k exportu");
+
+            var csv = new StringBuilder();
+            csv.AppendLine("Název;Cena (Kč);Kategorie;Popis");
+
+            foreach (var p in products)
+            {
+                string name = p.Name?.Replace(";", ",");
+                string category = p.Category?.Name?.Replace(";", ",") ?? "Bez kategorie"; 
+                string info = p.Info?.Replace(";", ",").Replace("\n", " ").Replace("\r", "");
+
+                csv.AppendLine($"{name};{p.Price};{category};{info}");
+            }
+
+            var encoding = Encoding.UTF8;
+            byte[] bom = encoding.GetPreamble();
+            byte[] content = encoding.GetBytes(csv.ToString());
+            byte[] finalFile = bom.Concat(content).ToArray();
+
+            return File(
+                finalFile,
+                "text/csv; charset=utf-8",
+                $"export_produktu_{DateTime.Now:yyyyMMdd}.csv"
+            );
         }
 
         // GET: api/Products/businessId/5
