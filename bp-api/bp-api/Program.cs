@@ -2,7 +2,8 @@ using bp_api.Data;
 using bp_api.Helpers;
 using bp_api.Models;
 using bp_api.Services;
-using Microsoft.AspNetCore.Authentication.JwtBearer; 
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -10,6 +11,12 @@ using Microsoft.OpenApi;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+var keysFolder = Path.Combine(builder.Environment.ContentRootPath, "temp-keys");
+if (!Directory.Exists(keysFolder)) Directory.CreateDirectory(keysFolder);
+
+builder.Services.AddDataProtection()
+    .PersistKeysToFileSystem(new DirectoryInfo(keysFolder))
+    .SetApplicationName("NajdiRostlinu");
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<AppDbContext>(options =>
