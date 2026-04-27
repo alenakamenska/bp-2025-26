@@ -30,6 +30,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddIdentity<User, Role>(options => {
     options.Password.RequireDigit = false;
     options.Password.RequiredLength = 6;
+    options.Tokens.PasswordResetTokenProvider = TokenOptions.DefaultProvider;
 })
 .AddEntityFrameworkStores<AppDbContext>()
 .AddDefaultTokenProviders()
