@@ -173,7 +173,6 @@ public class AuthController : ControllerBase
             return BadRequest("Neplatný požadavek");
         }
 
-        byte[] decodedTokenBytes = WebEncoders.Base64UrlDecode(model.Token);
         string decodedToken = System.Net.WebUtility.UrlDecode(model.Token);
 
         var result = await _userManager.ResetPasswordAsync(user, decodedToken, model.NewPassword);
@@ -181,6 +180,11 @@ public class AuthController : ControllerBase
         if (result.Succeeded)
         {
             return Ok(new { message = "Heslo bylo úspěšně změněno" });
+        }
+
+        foreach (var error in result.Errors)
+        {
+            Console.WriteLine($"RESET ERROR: {error.Code} - {error.Description}");
         }
 
         return BadRequest(result.Errors);
