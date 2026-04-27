@@ -156,8 +156,8 @@ public class AuthController : ControllerBase
 
         var token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
-        var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
-        var resetLink = $"http://localhost:3000/reset-hesla?token={encodedToken}&email={user.Email}";
+        var encodedToken = System.Net.WebUtility.UrlEncode(token); 
+        var resetLink = $"https://najdi-rostlinu.vercel.app/reset-hesla?token={encodedToken}&email={user.Email}";
 
         await _emailService.SendResetEmailAsync(user.Email, resetLink);
 
@@ -174,7 +174,7 @@ public class AuthController : ControllerBase
         }
 
         byte[] decodedTokenBytes = WebEncoders.Base64UrlDecode(model.Token);
-        string decodedToken = Encoding.UTF8.GetString(decodedTokenBytes);
+        string decodedToken = System.Net.WebUtility.UrlDecode(model.Token);
 
         var result = await _userManager.ResetPasswordAsync(user, decodedToken, model.NewPassword);
 

@@ -48,6 +48,7 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -70,7 +71,9 @@ builder.Services.AddCors(options =>
                         .AllowAnyMethod()
                         .AllowAnyHeader());
 });
-
+builder.Services.Configure<DataProtectionTokenProviderOptions>(o => {
+    o.TokenLifespan = TimeSpan.FromHours(24); 
+});
 builder.Services.AddScoped<MailSenderService>();
 
 var app = builder.Build();
