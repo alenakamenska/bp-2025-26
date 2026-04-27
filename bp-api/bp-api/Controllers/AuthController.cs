@@ -168,21 +168,16 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDTO model)
     {
         var user = await _userManager.FindByEmailAsync(model.Email);
-        if (user == null) return BadRequest("Uživatel nenalezen.");
+        if (user == null) return BadRequest("Uživatel nenalezen");
 
-        string tokenFromRequest = System.Net.WebUtility.UrlDecode(model.Token);
+        var result = await _userManager.ResetPasswordAsync(user, model.Token, model.NewPassword);
 
-        var result = await _userManager.ResetPasswordAsync(user, tokenFromRequest, model.NewPassword);
+        if (result.Succeeded) return Ok(new { message = "Heslo změněno!" });
 
-        if (result.Succeeded)
-        {
-            return Ok(new { message = "Heslo bylo úspěšně změněno" });
-        }
+        string decodedToken = System.Net.WebUtility.UrlDecode(model.Token);
+        result = await _userManager.ResetPasswordAsync(user, decodedToken, model.NewPassword);
 
-        foreach (var error in result.Errors)
-        {
-            Console.WriteLine($"FINÁLNÍ ERROR: {error.Code} - {error.Description}");
-        }
+        if (result.Succeeded) return Ok(new { message = "Heslo změněno po dekódování!" });
 
         return BadRequest(result.Errors);
     }
