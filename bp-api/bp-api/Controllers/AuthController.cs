@@ -152,11 +152,13 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDTO dto)
     {
         var user = await _userManager.FindByEmailAsync(dto.Email);
-        if (user == null) return Ok();
+        if (user == null) return Ok(); 
 
         var token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
-        var encodedToken = System.Net.WebUtility.UrlEncode(token); 
+        var tokenBytes = Encoding.UTF8.GetBytes(token);
+        var encodedToken = WebEncoders.Base64UrlEncode(tokenBytes);
+
         var resetLink = $"https://najdi-rostlinu.vercel.app/reset-hesla?token={encodedToken}&email={user.Email}";
 
         await _emailService.SendResetEmailAsync(user.Email, resetLink);
@@ -170,17 +172,22 @@ public class AuthController : ControllerBase
         var user = await _userManager.FindByEmailAsync(model.Email);
         if (user == null) return BadRequest("Uživatel nenalezen");
 
-        var result = await _userManager.ResetPasswordAsync(user, model.Token, model.NewPassword);
+        try
+        {
+            var decodedTokenBytes = WebEncoders.Base64UrlDecode(model.Token);
+            var actualToken = Encoding.UTF8.GetString(decodedTokenBytes);
 
-        if (result.Succeeded) return Ok(new { message = "Heslo změněno!" });
+            var result = await _userManager.ResetPasswordAsync(user, actualToken, model.NewPassword);
 
-        string decodedToken = System.Net.WebUtility.UrlDecode(model.Token);
-        result = await _userManager.ResetPasswordAsync(user, decodedToken, model.NewPassword);
+            if (result.Succeeded)
+                return Ok(new { message = "Heslo bylo úspěšně změněno" });
 
-        if (result.Succeeded) return Ok(new { message = "Heslo změněno po dekódování!" });
-
-        return BadRequest(result.Errors);
+            return BadRequest(result.Errors);
+        }
+        catch (FormatException)
+        {
+            return BadRequest("Neplatný formát tokenu");
+        }
     }
-
 }
 
