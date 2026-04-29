@@ -10,7 +10,7 @@ import Error from "../components/Error/Error"
 import { toast } from 'react-toastify';
 
 export const Register = () => {
-    const { register, handleSubmit, formState: { errors }, watch } = useForm();
+    const { register, handleSubmit, formState: { errors, isSubmitting }, watch } = useForm();
     const navigate = useNavigate();
     const [serverErrors, setServerErrors] = useState([]);
     const API_BASE_URL = process.env.REACT_APP_API_URL;
@@ -20,24 +20,22 @@ export const Register = () => {
         { value: "Business", label: "Zahradnictví/Květinářství" }
     ];
 
-    const onSubmit = data => {
+    const onSubmit = async (data) => { 
         setServerErrors([]); 
-        axios.post(`${API_BASE_URL}/Auth/Register`, {
-            email: data.email, 
-            password: data.password,
-            role: data.role
-        })
-        .then(response => {
+        try {
+            const response = await axios.post(`${API_BASE_URL}/Auth/Register`, {
+                email: data.email, 
+                password: data.password,
+                role: data.role
+            });
             navigate("/login"); 
             toast.success("Profil byl úspěšně vytvořen");
-        })
-        .catch(error => {
+        } catch (error) {
             if (error.response && error.response.data) {
                 const apiData = error.response.data;
                 if (Array.isArray(apiData)) {
                     setServerErrors(apiData);
-                } 
-                else if (apiData.message) {
+                } else if (apiData.message) {
                     setServerErrors([{ description: apiData.message }]);
                 } else {
                     setServerErrors([{ description: "Registrace se nezdařila" }]);
@@ -46,7 +44,7 @@ export const Register = () => {
                 setServerErrors([{ description: "Server neodpovídá" }]);
             }
             console.error("Chyba při registraci:", error.response?.data);
-        });
+        }
     };
 
     return (
@@ -104,7 +102,7 @@ export const Register = () => {
                     {errors.gdpr && <span className="error-text">{errors.gdpr.message}</span>}
                 </div>
                  <Error serverErrors={serverErrors}/>
-                <Button variant="primary" type="submit" text="Registrovat se"/>
+                <Button variant="primary" type="submit" text="Registrovat se" disabled={isSubmitting}/>
             </form>
         </div>
     );

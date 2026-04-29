@@ -12,7 +12,7 @@ import { useNavigate, Link } from "react-router-dom";
 import Loading from "../components/Loading/Loading";
 
 export const Login = () => {
-    const { register, handleSubmit, formState: { errors } } = useForm();
+    const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm();
     const navigate = useNavigate();
     const [, dispatch] = useAuthContext();
     const [serverErrors, setServerErrors] = useState([]);
@@ -26,20 +26,19 @@ export const Login = () => {
         toast.success("Přihlášení proběhlo úspěšně")
     };
 
-    const onSubmit = data => {
+    const onSubmit = async (data) => { 
         setServerErrors([]);
-        axios.post(`${API_BASE_URL}/Auth/Login`, {
-            email: data.email, 
-            password: data.password
-        })
-        .then(response => {
+        try {
+            const response = await axios.post(`${API_BASE_URL}/Auth/Login`, {
+                email: data.email, 
+                password: data.password
+            });
             if (response.data.token) {
                 handleLoginSuccess(response.data.token);
             }
-        })
-        .catch(error => {
+        } catch (error) {
             handleApiError(error);
-        });
+        }
     };
 
     const onGoogleSuccess = async (credentialResponse) => {
@@ -99,7 +98,7 @@ export const Login = () => {
                     <Link to="/zapomenute-heslo">Zapomněli jste heslo?</Link>
                 </div>
                 <Error serverErrors={serverErrors} />
-                <Button variant="primary" type="submit" text="Přihlásit se"/>
+                <Button variant="primary" type="submit" text="Přihlásit se" disabled={isSubmitting}/>
                 <div className="separator">nebo</div>
                 <div className="google-btn-container">
                     {isLoading ? (
