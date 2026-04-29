@@ -152,18 +152,27 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDTO dto)
     {
         var user = await _userManager.FindByEmailAsync(dto.Email);
-        if (user == null) return Ok(); 
+        if (user == null) return Ok();
 
         var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-
-        var tokenBytes = Encoding.UTF8.GetBytes(token);
-        var encodedToken = WebEncoders.Base64UrlEncode(tokenBytes);
-
+        var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
         var resetLink = $"https://najdi-rostlinu.vercel.app/reset-hesla?token={encodedToken}&email={user.Email}";
 
-        await _emailService.SendResetEmailAsync(user.Email, resetLink);
+        Console.WriteLine("************************************************");
+        Console.WriteLine($"ODKAZ PRO RESET: {resetLink}");
+        Console.WriteLine("************************************************");
+        _ = Task.Run(async () => {
+            try
+            {
+                await _emailService.SendResetEmailAsync(user.Email, resetLink);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Chyba odesílání na pozadí: " + ex.Message);
+            }
+        });
 
-        return Ok();
+        return Ok(new { message = "Pokud e-mail existuje, instrukce byly odeslány" });
     }
 
     [HttpPost("reset-password")]
@@ -179,14 +188,19 @@ public class AuthController : ControllerBase
 
             var result = await _userManager.ResetPasswordAsync(user, actualToken, model.NewPassword);
 
-            if (result.Succeeded)
-                return Ok(new { message = "Heslo bylo úspěšně změněno" });
+            if (result.Succeeded) return Ok(new { message = "Heslo změněno!" });
+
+            foreach (var error in result.Errors)
+            {
+                Console.WriteLine($"!!! IDENTITY CHYBA: {error.Code} - {error.Description}");
+            }
 
             return BadRequest(result.Errors);
         }
-        catch (FormatException)
+        catch (Exception ex)
         {
-            return BadRequest("Neplatný formát tokenu");
+            Console.WriteLine("KRITICKÁ CHYBA: " + ex.Message);
+            return BadRequest("Neplatný formát tokenu.");
         }
     }
 }
