@@ -44,11 +44,13 @@ export const FrontLayout = () => {
             icon={isLoggedIn ? CiLogout : CiLogin} 
             color="#fff" 
             onClick={handleAuthAction}
+            label={isLoggedIn ? "Odhlásit se" : "Přihlásit se"}
           />
           <IconButton 
             icon={isLoggedIn ? CiCircleInfo : CiUser} 
             color="#fff" 
-            onClick={() => {isLoggedIn ? navigate("/uzivatel") : navigate("/register")}}         
+            onClick={() => {isLoggedIn ? navigate("/uzivatel") : navigate("/register")}}   
+            label={isLoggedIn ? "Správa profilu" : "Registrace"}      
           />
         </div>
       </nav>

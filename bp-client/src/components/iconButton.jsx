@@ -1,10 +1,12 @@
 import React from "react";
 
-const IconButton = ({ icon: Icon, color = "#fff", size = 24, bg = "transparent", onClick }) => {
+const IconButton = ({ icon: Icon, color = "#fff", size = 24, bg = "transparent", onClick, label }) => {
   return (
     <button
       onClick={onClick}
       type="button"
+      title={label}       
+      aria-label={label}
       style={{
         display: "flex",
         alignItems: "center",

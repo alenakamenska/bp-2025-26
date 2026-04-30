@@ -1,5 +1,6 @@
 .login-container {
-  height: 100vh;
+  min-height: 100vh;
+  padding: 80px 0;
   width: 100vw;
   background-image: url('../images/form1.png'); 
   background-size: cover;
