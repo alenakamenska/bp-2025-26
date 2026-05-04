@@ -2,6 +2,10 @@
 [![Live Demo](https://img.shields.io/badge/demo-vstoupit_do_aplikace-brightgreen?style=for-the-badge&logo=vercel)](https://najdi-rostlinu.vercel.app)
 
 Tato aplikace vznikla v rámci bakalářské práce na TUL
+> [!IMPORTANT]
+> **První načtení dat v aplikaci může trvat delší dobu (až 1 minutu).**
+> Je to způsobeno „uspáváním“ bezplatného hostingu API při delší nečinnosti
+
 ## Funkce
 ### Pro podniky
 - Aplikace nabízí vytvoření vlastního profilu s kompletními informacemi o podniku
