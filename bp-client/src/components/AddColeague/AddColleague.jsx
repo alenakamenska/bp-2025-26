@@ -73,7 +73,6 @@ export const AddColleague = ({ businessId, accessToken, ownerId }) => {
 
     const handleRemoveColleague = async (userId) => {
         if (!window.confirm("Opravdu chcete tohoto kolegu odebrat ze správy podniku?")) return;
-
         try {
             await axios.delete(`${API_BASE_URL}/Businesses/${businessId}/remove-colleague/${userId}`, {
                 headers: { Authorization: `Bearer ${accessToken}` }

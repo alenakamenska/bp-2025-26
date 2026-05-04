@@ -203,15 +203,14 @@ namespace bp_api.Controllers
                 return NotFound("Žádné produkty k exportu");
 
             var csv = new StringBuilder();
-            csv.AppendLine("Název;Cena (Kč);Kategorie;Popis");
+            csv.AppendLine("Název;Cena (Kč);Popis");
 
             foreach (var p in products)
             {
                 string name = p.Name?.Replace(";", ",");
-                string category = p.Category?.Name?.Replace(";", ",") ?? "Bez kategorie"; 
                 string info = p.Info?.Replace(";", ",").Replace("\n", " ").Replace("\r", "");
 
-                csv.AppendLine($"{name};{p.Price};{category};{info}");
+                csv.AppendLine($"{name};{p.Price};{info}");
             }
 
             var encoding = Encoding.UTF8;

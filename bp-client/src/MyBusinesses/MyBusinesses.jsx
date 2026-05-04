@@ -8,12 +8,15 @@ import { BusinessForm } from "../components/BusinessForm/BusinessForm";
 import EmptyState from "../components/EmptyState/EmptyState";
 import Loading from "../components/Loading/Loading";
 import { toast } from "react-toastify";
+import { ConfirmModal } from "../components/ConfirmModal/ConfirmModal";
 
 export const MyBusiness = () => {
     const [businesses, setBusinesses] = useState([]);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
     const [state] = useAuthContext(); 
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [businessIdToDelete, setBusinessIdToDelete] = useState(null);
     const API_BASE_URL = process.env.REACT_APP_API_URL;
     const userId = state.profile?.["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"] 
                     || state.profile?.sub;
@@ -76,16 +79,24 @@ export const MyBusiness = () => {
         }
     };
 
-     const handleDeleteBusiness = async (id) => {
-        if (!window.confirm("Opravdu chcete tento podnik smazat?")) return;
+    const openDeleteModal = (id) => {
+        setBusinessIdToDelete(id);
+        setIsModalOpen(true);
+    };
+
+    const handleConfirmDelete = async () => {
+        if (!businessIdToDelete) return;
         try {
-            await axios.delete(`${API_BASE_URL}/Businesses/${id}`, {
+            await axios.delete(`${API_BASE_URL}/Businesses/${businessIdToDelete}`, {
                 headers: { Authorization: `Bearer ${state.accessToken}` }
             });
-            setBusinesses(prev => prev.filter(p => p.id !== id));
-            toast.success("Podnik byl úspěšně smazán")
+            setBusinesses(prev => prev.filter(p => p.id !== businessIdToDelete));
+            toast.success("Podnik byl úspěšně smazán");
         } catch (err) {
-            toast.error("Smazání se nepodařilo")
+            toast.error("Smazání se nepodařilo");
+        } finally {
+            setIsModalOpen(false);
+            setBusinessIdToDelete(null);
         }
     };
 
@@ -110,7 +121,7 @@ export const MyBusiness = () => {
                                         id={b.id}
                                         owner={true} 
                                         isVerified={b.isVerified}
-                                        onDelete={handleDeleteBusiness}          
+                                        onDelete={() => openDeleteModal(b.id)}          
                                     />
                                 ))}
                             </div>
@@ -130,6 +141,13 @@ export const MyBusiness = () => {
                     accessToken={state.accessToken} 
                 />
             </section>
+            <ConfirmModal 
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                onConfirm={handleConfirmDelete}
+                title="Smazat podnik?"
+                message="Opravdu chcete tento podnik smazat?"
+            />
         </div>
     );
 };

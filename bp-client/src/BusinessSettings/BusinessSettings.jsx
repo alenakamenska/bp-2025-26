@@ -11,6 +11,7 @@ import { toast } from "react-toastify";
 import Loading from "../components/Loading/Loading";
 import EmptyState from "../components/EmptyState/EmptyState";
 import { Button } from "../components/Button/Button";
+import { ConfirmModal } from "../components/ConfirmModal/ConfirmModal";
 
 export const BusinessSettings = () => {
   const { id } = useParams();
@@ -25,6 +26,8 @@ export const BusinessSettings = () => {
   const [loading, setLoading] = useState(true);
   const [, setError] = useState(null);
   const { checkAccess } = useAuthorization();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [productToDelete, setProductToDelete] = useState(null);
   const API_BASE_URL = process.env.REACT_APP_API_URL;
 
   const daysOrder = useMemo(
@@ -214,7 +217,6 @@ export const BusinessSettings = () => {
   };
 
   const handleDeleteProduct = async (id) => {
-    if (!window.confirm("Opravdu chcete tento produkt smazat?")) return;
     try {
       await axios.delete(`${API_BASE_URL}/Products/${id}`, {
         headers: { Authorization: `Bearer ${state.accessToken}` },
@@ -226,10 +228,30 @@ export const BusinessSettings = () => {
     }
   };
 
+  const openDeleteModal = (pid) => {
+    setProductToDelete(pid); 
+    setIsModalOpen(true);    
+  };
+
+  const confirmDelete = async () => {
+    if (productToDelete) {
+      await handleDeleteProduct(productToDelete); 
+      setIsModalOpen(false);
+      setProductToDelete(null);
+    }
+  };
+
   if (loading) return <Loading />;
 
   return (
     <div className="business-settings-page">
+      <ConfirmModal 
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={confirmDelete}
+        title="Smazat produkt?"
+        message="Opravdu chcete tento produkt trvale odstranit?"
+      />
       <h1 className="settings-page-title">Správa podniku</h1>
       <div className="tabs-navigation">
         <button
@@ -292,7 +314,7 @@ export const BusinessSettings = () => {
                       price={p.price}
                       category={p.category?.name}
                       isOwner={true}
-                      onDelete={() => handleDeleteProduct(p.id)}
+                      onDelete={() => openDeleteModal(p.id)}                      
                       onUpdate={() => navigate(`/upravit-produkt/${p.id}`)}
                       product={p}
                     />
