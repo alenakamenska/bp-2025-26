@@ -92,14 +92,33 @@ namespace bp_api.Controllers
 
         // PUT: api/Products/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutProduct(int id, Product product)
+        [Authorize(Roles = "Business")]
+        public async Task<IActionResult> PutProduct(int id, [FromBody] Product product)
         {
-            if (id != product.Id)
+            var currentUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(currentUserId)) return Unauthorized();
+
+            if (id != product.Id) return BadRequest("ID v URL neodpovídá ID produktu");
+
+            var existingProduct = await _context.Products
+                .Include(p => p.Business)
+                    .ThenInclude(b => b.Users)
+                .FirstOrDefaultAsync(p => p.Id == id);
+
+            if (existingProduct == null) return NotFound("Produkt nebyl nalezen");
+
+            if (existingProduct.Business == null || !existingProduct.Business.Users.Any(u => u.Id == currentUserId))
             {
-                return BadRequest();
+                return StatusCode(403, "Nemáte oprávnění upravovat produkty tohoto podniku");
             }
 
-            _context.Entry(product).State = EntityState.Modified;
+            existingProduct.Name = product.Name;
+            existingProduct.Price = product.Price;
+            existingProduct.Info = product.Info;
+            existingProduct.ImageURL = product.ImageURL;
+            existingProduct.CategoryId = product.CategoryId;
+
+            if (existingProduct.Price < 0) return BadRequest("Cena nesmí být záporná");
 
             try
             {
@@ -107,19 +126,12 @@ namespace bp_api.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ProductExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                if (!ProductExists(id)) return NotFound();
+                else throw;
             }
 
             return NoContent();
         }
-
         // POST: api/Products
         [HttpPost]
         [Authorize(Roles = "Business")] 
@@ -134,9 +146,25 @@ namespace bp_api.Controllers
 
             var user = await _context.Users.FindAsync(currentUserId);
 
+            var business = await _context.Businesses
+            .Include(b => b.Users)
+            .FirstOrDefaultAsync(b => b.Id == dto.BusinessId);
+
+            if (business == null)
+            {
+                return NotFound("Zahradnictví nebylo nalezeno");
+            }
+
             if (user == null)
             {
                 return BadRequest("Uživatel nebyl nalezen");
+            }
+
+            if (string.IsNullOrWhiteSpace(dto.Name)) return BadRequest("Název produktu je povinný");
+
+            if (!business.Users.Any(u => u.Id == currentUserId))
+            {
+                return StatusCode(403, "Nemáte oprávnění přidávat produkty k tomuto podniku");
             }
 
             var product = new Product
@@ -160,12 +188,25 @@ namespace bp_api.Controllers
 
         // DELETE: api/Products/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Business")] 
         public async Task<IActionResult> DeleteProduct(int id)
         {
-            var product = await _context.Products.FindAsync(id);
+            var currentUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(currentUserId)) return Unauthorized();
+
+            var product = await _context.Products
+                .Include(p => p.Business)
+                    .ThenInclude(b => b.Users)
+                .FirstOrDefaultAsync(p => p.Id == id);
+
             if (product == null)
             {
                 return NotFound();
+            }
+
+            if (product.Business == null || !product.Business.Users.Any(u => u.Id == currentUserId))
+            {
+                return StatusCode(403, "Nemáte oprávnění smazat tento produkt");
             }
 
             _context.Products.Remove(product);

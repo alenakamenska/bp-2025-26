@@ -113,13 +113,27 @@ namespace bp_api.Controllers
 
         // PUT: api/Businesses/5
         [HttpPut("{id}")]
+        [Authorize(Roles = "Business")]
+
         public async Task<IActionResult> PutBusiness(int id, BusinessDTO dto)
         {
+            var currentUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
             var business = await _context.Businesses.FindAsync(id);
+
+            if (string.IsNullOrWhiteSpace(dto.Name))
+            {
+                return BadRequest("Název podniku nesmí být prázdný");
+            }
 
             if (business == null)
             {
-                return NotFound("Podnik nebyl nalezen.");
+                return NotFound("Podnik nebyl nalezen");
+            }
+
+            if (!(business.OwnerId == currentUserId))
+            {
+                return StatusCode(403, "Nelze upravovat cizí podnik");
             }
 
             if (business.Street != dto.Street || business.City != dto.City || business.HouseNumber != dto.HouseNumber)
@@ -165,17 +179,23 @@ namespace bp_api.Controllers
 
         // POST: api/Businesses
         [HttpPost]
+        [Authorize(Roles = "Business")]
         public async Task<ActionResult<Business>> PostBusiness(BusinessDTO dto)
         {
             var currentUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
 
+            if (string.IsNullOrWhiteSpace(dto.Name))
+            {
+                return BadRequest("Název podniku nesmí být prázdný");
+            }
+
             if (string.IsNullOrEmpty(currentUserId))
             {
-                return Unauthorized("Uživatel není přihlášen.");
+                return Unauthorized("Uživatel není přihlášen");
             }
 
             var user = await _context.Users.FindAsync(currentUserId);
-            if (user == null) return BadRequest("Uživatel nebyl nalezen.");
+            if (user == null) return BadRequest("Uživatel nebyl nalezen");
 
             double? lat = null;
             double? lon = null;
@@ -194,6 +214,7 @@ namespace bp_api.Controllers
             {
                 Console.WriteLine($"Geocoding selhal: {ex.Message}");
             }
+
 
             var business = new Business
             {
@@ -229,9 +250,10 @@ namespace bp_api.Controllers
             {
                 return NotFound();
             }
-            if (!business.Users.Any(u => u.Id == currentUserId))
+
+            if (!(business.OwnerId == currentUserId))
             {
-                return Forbid("Nelze mazat cizí podnik");
+                return StatusCode(403, "Nelze mazat cizí podnik");
             }
 
             _context.Businesses.Remove(business);
@@ -266,7 +288,7 @@ namespace bp_api.Controllers
 
             if (business == null)
             {
-                return NotFound("K tomuto produktu nebylo nalezeno žádné zahradnictví");
+                return NotFound("K tomuto produktu nebyl nalezen žádný podnik");
             }
 
             return Ok(business);
@@ -317,6 +339,8 @@ namespace bp_api.Controllers
         }
 
         [HttpPost("{businessId}/add-colleague")]
+        [Authorize(Roles = "Business")]
+
         public async Task<IActionResult> AddColleague(int businessId, [FromBody] string colleagueEmail)
         {
             var colleague = await _userManager.FindByEmailAsync(colleagueEmail);
@@ -339,7 +363,7 @@ namespace bp_api.Controllers
             if (business == null) return NotFound("Podnik nenalezen");
 
             if (business.OwnerId != currentUserId)
-                return Forbid("Pouze majitel může přidávat kolegy");
+                return StatusCode(403,"Pouze majitel může přidávat kolegy");
             if (business == null) return NotFound("Podnik nenalezen");
 
             if (!business.Users.Any(u => u.Id == colleague.Id))
@@ -369,6 +393,8 @@ namespace bp_api.Controllers
         }
 
         [HttpDelete("{businessId}/remove-colleague/{userId}")]
+        [Authorize(Roles = "Business")]
+
         public async Task<IActionResult> RemoveColleague(int businessId, string userId)
         {
             var currentUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
@@ -380,10 +406,10 @@ namespace bp_api.Controllers
             if (business == null) return NotFound();
 
             if (business.OwnerId != currentUserId)
-                return Forbid("Pouze majitel může spravovat tým.");
+                return StatusCode(403,"Pouze majitel může spravovat tým");
 
             if (userId == business.OwnerId)
-                return BadRequest("Majitele nelze odebrat.");
+                return BadRequest("Majitele nelze odebrat");
 
             var userToRemove = business.Users.FirstOrDefault(u => u.Id == userId);
             if (userToRemove != null)

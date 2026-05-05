@@ -73,6 +73,16 @@ namespace bp_api.Controllers
 
             var user = await _userManager.FindByIdAsync(currentUserId);
             if (user == null) return NotFound("Uživatel nebyl nalezen");
+
+            if (currentIdp != "Google" && user.Email != dto.Email)
+            {
+                var existingUser = await _userManager.FindByEmailAsync(dto.Email);
+                if (existingUser != null && existingUser.Id != user.Id)
+                {
+                    return BadRequest(new { message = "Tato e-mailová adresa je již použita" });
+                }
+            }
+
             if (currentIdp == "Google")
             {
                 if (user.Email != dto.Email)
@@ -116,7 +126,12 @@ namespace bp_api.Controllers
             if (string.IsNullOrEmpty(userId)) return Unauthorized();
 
             var user = await _userManager.FindByIdAsync(userId);
-            if (user == null) return NotFound("Uživatel nenalezen.");
+            if (user == null) return NotFound("Uživatel nenalezen");
+
+            if (string.IsNullOrEmpty(user.PasswordHash))
+            {
+                return BadRequest(new { message = "Uživatelé přihlášení přes Google nemohou měnit heslo" });
+            }
 
             var result = await _userManager.ChangePasswordAsync(user, dto.OldPassword, dto.NewPassword);
 
@@ -125,7 +140,7 @@ namespace bp_api.Controllers
                 return BadRequest(result.Errors);
             }
 
-            return Ok(new { message = "Heslo bylo úspěšně změněno." });
+            return Ok(new { message = "Heslo bylo úspěšně změněno" });
         }
 
         private async Task<string> GenerateJwtToken(User user, string idp = "Local")

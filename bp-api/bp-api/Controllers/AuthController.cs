@@ -200,7 +200,7 @@ public class AuthController : ControllerBase
         catch (Exception ex)
         {
             Console.WriteLine("KRITICKÁ CHYBA: " + ex.Message);
-            return BadRequest("Neplatný formát tokenu.");
+            return BadRequest("Neplatný formát tokenu");
         }
     }
 }

@@ -86,11 +86,23 @@ namespace bp_api.Controllers
 
         // PUT: api/Tips/5
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> PutTips(int id, Tips tips)
         {
             if (id != tips.Id)
             {
                 return BadRequest();
+            }
+
+            var currentUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+            var existingTip = await _context.Tips.AsNoTracking().FirstOrDefaultAsync(t => t.Id == id);
+
+            if (existingTip == null) return NotFound();
+
+            if (existingTip.UserId != currentUserId)
+            {
+                return StatusCode(403, "Nelze upravovat radu, která není Vaše");
             }
 
             _context.Entry(tips).State = EntityState.Modified;
@@ -143,6 +155,7 @@ namespace bp_api.Controllers
 
         // DELETE: api/Tips/5
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> DeleteTips(int id)
         {
             var currentUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
@@ -154,7 +167,7 @@ namespace bp_api.Controllers
             }
             if(!tips.UserId.Equals(currentUserId))
             {
-                return Forbid("Nelze smazat radu, která není Vaše");
+                return StatusCode(403, "Nelze smazat radu, která není Vaše");
             }
 
             _context.Tips.Remove(tips);
