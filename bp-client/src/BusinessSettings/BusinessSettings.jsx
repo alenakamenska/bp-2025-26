@@ -127,7 +127,7 @@ export const BusinessSettings = () => {
       });
       toast.success("Podnik byl úspěšně aktualizován")
     } catch (error) {
-      toast.error("Produkt se nepodařilo uložit")
+      toast.error("Podnik se nepodařilo aktualizovat")
       setServerErrors(["Nepodařilo se uložit změny podniku"]);
     }
   };

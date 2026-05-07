@@ -366,6 +366,11 @@ namespace bp_api.Controllers
                 return StatusCode(403,"Pouze majitel může přidávat kolegy");
             if (business == null) return NotFound("Podnik nenalezen");
 
+            if (business.Users.Any(u => u.Id == colleague.Id))
+            {
+                return BadRequest("Kolega je již přidaný v týmu");
+            }
+
             if (!business.Users.Any(u => u.Id == colleague.Id))
             {
                 business.Users.Add(colleague);

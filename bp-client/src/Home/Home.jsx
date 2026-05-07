@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import image from "../images/main.jpg";
-import image1 from "../images/form1.png";
+import image1 from "../images/form1.jpg";
 import image2 from "../images/oprava.jpg"
 import "./home.css";
 import Card from "../components/Card/card";
@@ -45,7 +45,7 @@ export const Home = () => {
       </div>
       <div className="container">
         <Warning />
-        <div className="info-section">
+        <div className="home-grid">
           <div className="home-info-card">
             <img src={image1} alt="Produkty" />
             <div className="info-content">

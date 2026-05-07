@@ -6,12 +6,16 @@ import IconButton from "../iconButton"
 import { CiTrash } from "react-icons/ci";
 import "./AddColleague.css";
 import { FaShieldAlt } from "react-icons/fa";
+import { ConfirmModal } from "../ConfirmModal/ConfirmModal"; 
+import { toast } from "react-toastify";
 
 export const AddColleague = ({ businessId, accessToken, ownerId }) => {
     const [email, setEmail] = useState("");
     const [colleagues, setColleagues] = useState([]);
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState({ text: "", type: "" });
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedColleagueId, setSelectedColleagueId] = useState(null);
     const API_BASE_URL = process.env.REACT_APP_API_URL;
 
     const getCurrentUserId = () => {
@@ -39,6 +43,7 @@ export const AddColleague = ({ businessId, accessToken, ownerId }) => {
             console.error("Chyba při načítání kolegů", err);
         }
     }, [businessId, accessToken, API_BASE_URL]);
+
     useEffect(() => {
         if (businessId) {
             fetchColleagues();
@@ -71,16 +76,21 @@ export const AddColleague = ({ businessId, accessToken, ownerId }) => {
         }
     };
 
-    const handleRemoveColleague = async (userId) => {
-        if (!window.confirm("Opravdu chcete tohoto kolegu odebrat ze správy podniku?")) return;
+    const openRemoveModal = (userId) => {
+        setSelectedColleagueId(userId);
+        setIsModalOpen(true);
+    };
+
+    const handleConfirmRemove = async () => {
+        setIsModalOpen(false);
         try {
-            await axios.delete(`${API_BASE_URL}/Businesses/${businessId}/remove-colleague/${userId}`, {
+            await axios.delete(`${API_BASE_URL}/Businesses/${businessId}/remove-colleague/${selectedColleagueId}`, {
                 headers: { Authorization: `Bearer ${accessToken}` }
             });
-            setMessage({ text: "Kolega byl odebrán.", type: "success" });
+            toast.success("Kolega byl úspěšně odebrán")
             fetchColleagues();
         } catch (err) {
-            setMessage({ text: "Nepodařilo se odebrat kolegu.", type: "error" });
+            toast.error("Kolegu se nepodařilo odebrat")
         }
     };
 
@@ -135,7 +145,7 @@ export const AddColleague = ({ businessId, accessToken, ownerId }) => {
                                         icon={CiTrash}
                                         color="#ff4d4f"
                                         size={20}
-                                        onClick={() => handleRemoveColleague(c.id)}
+                                        onClick={() => openRemoveModal(c.id)} 
                                         title="Odebrat kolegu"
                                     />
                                 )}
@@ -143,9 +153,16 @@ export const AddColleague = ({ businessId, accessToken, ownerId }) => {
                         ))}
                     </ul>
                 ) : (
-                    <p className="empty-text">Zatím jste nepřidali žádné kolegy.</p>
+                    <p className="empty-text">Zatím jste nepřidali žádné kolegy</p>
                 )}
             </section>
+            <ConfirmModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                onConfirm={handleConfirmRemove}
+                title="Odebrat kolegu"
+                message="Opravdu chcete tohoto kolegu odebrat ze správy podniku?"
+            />
         </div>
     );
 };
