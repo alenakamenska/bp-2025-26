@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using bp_api.Data;
+using bp_api.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using bp_api.Data;
-using bp_api.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace bp_api.Controllers
 {
@@ -19,6 +20,14 @@ namespace bp_api.Controllers
         public OpeningHoursController(AppDbContext context)
         {
             _context = context;
+        }
+
+        private async Task<bool> IsUserAuthorized(int businessId)
+        {
+            var currentUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(currentUserId)) return false;
+
+            return await _context.Businesses.AnyAsync(b => b.Id == businessId && b.OwnerId == currentUserId);
         }
 
         // GET: api/OpeningHours
@@ -44,11 +53,18 @@ namespace bp_api.Controllers
 
         // PUT: api/OpeningHours/5
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> PutOpeningHours(string id, OpeningHours openingHours)
         {
+
             if (id != openingHours.Day)
             {
                 return BadRequest();
+            }
+
+            if (!await IsUserAuthorized(openingHours.BusinessId))
+            {
+                return StatusCode(403, "Nemáte oprávnění měnit otevírací dobu tohoto podniku");
             }
 
             _context.Entry(openingHours).State = EntityState.Modified;
@@ -74,8 +90,15 @@ namespace bp_api.Controllers
 
         // POST: api/OpeningHours
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<OpeningHours>> PostOpeningHours(OpeningHours openingHours)
         {
+
+            if (!await IsUserAuthorized(openingHours.BusinessId))
+            {
+                return StatusCode(403, "Nemáte oprávnění přidávat hodiny pro tento podnik");
+            }
+
             _context.OpeningHours.Add(openingHours);
             try
             {
@@ -98,12 +121,18 @@ namespace bp_api.Controllers
 
         // DELETE: api/OpeningHours/5
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> DeleteOpeningHours(string id)
         {
             var openingHours = await _context.OpeningHours.FindAsync(id);
             if (openingHours == null)
             {
                 return NotFound();
+            }
+
+            if (!await IsUserAuthorized(openingHours.BusinessId))
+            {
+                return StatusCode(403, "Nemáte oprávnění mazat hodiny pro tento podnik");
             }
 
             _context.OpeningHours.Remove(openingHours);
@@ -134,11 +163,17 @@ namespace bp_api.Controllers
 
         // PUT: api/OpeningHours/bulk
         [HttpPut("bulk")]
+        [Authorize]
         public async Task<IActionResult> PutOpeningHoursBulk(List<OpeningHours> hoursList)
         {
             if (hoursList == null || !hoursList.Any())
             {
                 return BadRequest("Seznam otevíracích hodin je prázdný");
+            }
+
+            if (!await IsUserAuthorized(hoursList[0].BusinessId))
+            {
+                return StatusCode(403, "Nemáte oprávnění měnit hodiny pro tento podnik");
             }
 
             foreach (var hours in hoursList)
