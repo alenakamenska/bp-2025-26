@@ -77,7 +77,7 @@ export const EditTip = () => {
             navigate(-1);
         } catch (error) {
             console.error("Chyba:", error.response?.data || error.message);
-            toast.error("Nepodařilo se uložit radu")
+            toast.error(error.response?.data || error.message)
         } finally {
             setIsSubmitting(false);
         }

@@ -103,7 +103,7 @@ export const ProductUpdate = () => {
             return true;
         } catch (error) {
             console.error("Chyba při aktualizaci:", error);
-            setServerErrors(["Nepodařilo se uložit změny"]);
+            setServerErrors([error.response?.data || error.message]);
             return false;
         }
     };

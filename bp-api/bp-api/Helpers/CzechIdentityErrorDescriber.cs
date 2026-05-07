@@ -47,5 +47,14 @@ namespace bp_api.Helpers
                 Description = "Heslo musí obsahovat alespoň jeden speciální znak"
             };
         }
+
+        public override IdentityError PasswordMismatch()
+        {
+            return new IdentityError 
+            { 
+                Code = nameof(PasswordMismatch), 
+                Description = "Nesprávné heslo" 
+            };
+        }
     }
 }

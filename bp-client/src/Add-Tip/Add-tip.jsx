@@ -60,7 +60,7 @@ export const AddTip = () => {
             navigate("/rady");
         } catch (error) {
             console.error("Chyba:", error.response?.data || error.message);
-            toast.error("Radu se nepodařilo uložit");
+            toast.error(error.response?.data || error.message);
         } finally {
             setIsSubmitting(false);
         }

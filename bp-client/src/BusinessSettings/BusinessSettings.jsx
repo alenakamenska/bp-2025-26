@@ -211,7 +211,7 @@ export const BusinessSettings = () => {
       fetchBusinessProducts();
       return true;
     } catch (error) {
-      setServerErrors(["Nepodařilo se uložit produkt"]);
+      setServerErrors([error.response?.data || error.message]);
       return false;
     }
   };

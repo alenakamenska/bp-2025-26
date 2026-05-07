@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using bp_api.Data;
+using bp_api.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using bp_api.Data;
-using bp_api.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace bp_api.Controllers
 {
@@ -46,9 +47,19 @@ namespace bp_api.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCategory(int id, Category category)
         {
-            if (id != category.Id)
+
+            if (string.IsNullOrWhiteSpace(category.Name))
             {
-                return BadRequest();
+                return BadRequest("Název kategorie nesmí být prázdný");
+            }
+
+            var normalizedName = category.Name.Trim().ToLower();
+            var nameExists = await _context.Categories
+                .AnyAsync(c => c.Name.ToLower() == normalizedName && c.Id != id);
+
+            if (nameExists)
+            {
+                return BadRequest($"Jiná kategorie s názvem '{category.Name}' již existuje");
             }
 
             _context.Entry(category).State = EntityState.Modified;
@@ -76,6 +87,20 @@ namespace bp_api.Controllers
         [HttpPost]
         public async Task<ActionResult<Category>> PostCategory(Category category)
         {
+            if (string.IsNullOrWhiteSpace(category.Name))
+            {
+                return BadRequest("Název kategorie nesmí být prázdný");
+            }
+
+            var normalizedName = category.Name.Trim().ToLower();
+            var exists = await _context.Categories
+                .AnyAsync(c => c.Name.ToLower() == normalizedName);
+
+            if (exists)
+            {
+                return BadRequest($"Kategorie s názvem '{category.Name}' již existuje");
+            }
+
             _context.Categories.Add(category);
             await _context.SaveChangesAsync();
 

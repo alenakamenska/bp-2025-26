@@ -299,7 +299,11 @@ namespace bp_api.Controllers
         [HttpGet("cities")]
         public async Task<ActionResult<Business>> GetBusinessCities()
         {
-            var cities = await _context.Businesses.Select(b => b.City).Distinct().ToListAsync();
+            var cities = await _context.Businesses
+             .Where(b => !string.IsNullOrEmpty(b.City)) 
+             .Select(b => b.City)
+             .Distinct()
+             .ToListAsync();
 
             if (cities == null)
             {
