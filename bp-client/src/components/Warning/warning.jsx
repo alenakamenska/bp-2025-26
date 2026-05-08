@@ -9,14 +9,20 @@ export default function Warning() {
   const [weatherData, setWeatherData] = useState(null);
   const [alerts, setAlerts] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  const [isDefaultLocation, setIsDefaultLocation] = useState(false);
   const CACHE_KEY = "garden_weather_cache";
   const CACHE_MAX_AGE = 6 * 60 * 60 * 1000;
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
-      (pos) => setCoords({ lat: pos.coords.latitude, lon: pos.coords.longitude }),
-      () => setCoords({ lat: 50.08, lon: 14.44 })
+      (pos) => {
+        setCoords({ lat: pos.coords.latitude, lon: pos.coords.longitude });
+        setIsDefaultLocation(false);
+      },
+      () => {
+        setCoords({ lat: 50.08, lon: 14.44 });
+        setIsDefaultLocation(true); 
+      }
     );
   }, []);
 
@@ -80,6 +86,11 @@ export default function Warning() {
     <div className="garden-weather-card">
       <div className="weather-header">
         <h2 className="title"><GoAlert className="icon-alert" /> Výstrahy</h2>
+        {isDefaultLocation && (
+          <p style={{ fontSize: '0.8rem', color: '#666', marginTop: '-5px' }}>
+            Zobrazena výchozí poloha: Praha
+          </p>
+        )}
       </div>
       <div className="alerts-list">
         {alerts.map((alert, index) => (
