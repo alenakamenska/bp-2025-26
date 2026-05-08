@@ -35,7 +35,8 @@ export const EditTip = () => {
                     name: tipRes.data.name,
                     info: tipRes.data.info,
                     categoryId: tipRes.data.categoryId || "",
-                    userId: tipRes.data.userId 
+                    userId: tipRes.data.userId ,
+                    productId: tipRes.data.productId
                 });
             } catch (err) {
                 console.error("Chyba při načítání:", err);
@@ -68,6 +69,7 @@ export const EditTip = () => {
                 info: formData.info,
                 userId: initialTipData.userId, 
                 categoryId: finalCategoryId,
+                productId: initialTipData.productId
             };
 
             await axios.put(`${API_BASE_URL}/Tips/${id}`, payload, {
