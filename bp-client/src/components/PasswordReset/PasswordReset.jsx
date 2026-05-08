@@ -41,6 +41,7 @@ export const PasswordReset = () => {
                     type="password" 
                     {...register("newPassword", { 
                         required: "Zadejte nové heslo",
+                        minLength: { value: 8, message: "Heslo musí mít aspoň 8 znaků" }
                     })}
                     error={errors.newPassword}
                 />
