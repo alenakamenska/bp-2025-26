@@ -65,6 +65,9 @@ export const ForgotPassword = () => {
                         text="Přihlášení"
                     />
                 </div>
+                <p className="msg-pass">
+                    Pokud nevidíte e-mail pro obnovu hesla v doručené poště, zkontrolujte prosím i složku se spamem nebo hromadnou korespondenci
+                </p>
             </div>
         </div>
     );

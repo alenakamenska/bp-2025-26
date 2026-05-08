@@ -99,7 +99,7 @@ export const Register = () => {
                     error={errors.password}
                     {...register("password", { 
                         required: "Heslo je povinné",
-                        minLength: { value: 6, message: "Heslo musí mít aspoň 6 znaků" }
+                        minLength: { value: 8, message: "Heslo musí mít aspoň 8 znaků" }
                     })}
                     placeholder="zadejte heslo..."
                 />
