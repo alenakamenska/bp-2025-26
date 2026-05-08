@@ -35,6 +35,7 @@ export const Register = () => {
 
     const onSubmit = async (data) => { 
         setServerErrors([]); 
+        setIsLoading(true); 
         try {
             await axios.post(`${API_BASE_URL}/Auth/Register`, {
                 email: data.email, 
@@ -45,6 +46,7 @@ export const Register = () => {
             toast.success("Profil byl úspěšně vytvořen");
         } catch (error) {
             handleApiError(error);
+            setIsLoading(false); 
         }
     };
 
@@ -137,27 +139,29 @@ export const Register = () => {
                     {errors.gdpr && <span className="error-text" style={{color: 'red', fontSize: '12px'}}>{errors.gdpr.message}</span>}
                 </div>
                 <Error serverErrors={serverErrors}/>
-                <Button 
-                    variant="primary" 
-                    type="submit" 
-                    text="Registrovat se" 
-                    disabled={isSubmitting || isLoading}
-                />
-                <div className="separator">nebo</div>
-                <div className="google-btn-container">
-                    {isLoading ? (
-                        <Loading message="Probíhá registrace..."/>
-                    ) : (
-                        <GoogleLogin
-                            onSuccess={onGoogleSuccess}
-                            onError={() => {
-                                setServerErrors([{ description: "Google registrace selhala" }]);
-                                setIsLoading(false);
-                            }}
-                            useOneTap
+                {(isSubmitting || isLoading) ? (
+                    <Loading message="Provádím registraci..." />
+                ) : (
+                    <>
+                        <Button 
+                            variant="primary" 
+                            type="submit" 
+                            text="Registrovat se" 
+                            disabled={isSubmitting || isLoading}
                         />
-                    )}
-                </div>
+                        <div className="separator">nebo</div>
+                        <div className="google-btn-container">
+                            <GoogleLogin
+                                onSuccess={onGoogleSuccess}
+                                onError={() => {
+                                    setServerErrors([{ description: "Google registrace selhala" }]);
+                                    setIsLoading(false);
+                                }}
+                                useOneTap
+                            />
+                        </div>
+                    </>
+                )}
             </form>
         </div>
     );

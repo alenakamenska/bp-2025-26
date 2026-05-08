@@ -28,6 +28,7 @@ export const Login = () => {
 
     const onSubmit = async (data) => { 
         setServerErrors([]);
+        setIsLoading(true); 
         try {
             const response = await axios.post(`${API_BASE_URL}/Auth/Login`, {
                 email: data.email, 
@@ -38,6 +39,7 @@ export const Login = () => {
             }
         } catch (error) {
             handleApiError(error);
+            setIsLoading(false); 
         }
     };
 
@@ -98,23 +100,32 @@ export const Login = () => {
                     <Link to="/zapomenute-heslo">Zapomněli jste heslo?</Link>
                 </div>
                 <Error serverErrors={serverErrors} />
-                <Button variant="primary" type="submit" text="Přihlásit se" disabled={isSubmitting}/>
-                <div className="separator">nebo</div>
-                <div className="google-btn-container">
-                    {isLoading ? (
-                        <Loading message="Přihlašování"/>
-                    ) : (
-                        <GoogleLogin
-                            onSuccess={onGoogleSuccess}
-                            onError={() => {
-                                setServerErrors([{ description: "Google přihlášení selhalo" }]);
-                                setIsLoading(false);
-                            }}
-                            useOneTap
-                            use_fedcm_for_prompt={true}
+                {isLoading || isSubmitting ? (
+                    <div style={{ display: 'flex', justifyContent: 'center', padding: '20px' }}>
+                        <Loading message="Ověřuji údaje..." />
+                    </div>
+                ) : (
+                    <>
+                        <Button 
+                            variant="primary" 
+                            type="submit" 
+                            text="Přihlásit se" 
+                            disabled={isSubmitting}
                         />
-                    )}
-                </div>
+                        <div className="separator">nebo</div>
+                        <div className="google-btn-container">
+                            <GoogleLogin
+                                onSuccess={onGoogleSuccess}
+                                onError={() => {
+                                    setServerErrors([{ description: "Google přihlášení selhalo" }]);
+                                    setIsLoading(false);
+                                }}
+                                useOneTap
+                                use_fedcm_for_prompt={true}
+                            />
+                        </div>
+                    </>
+                )}
             </form>
         </div>
     );
