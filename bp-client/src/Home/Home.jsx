@@ -50,7 +50,7 @@ export const Home = () => {
             <img src={image1} alt="Produkty" />
             <div className="info-content">
               <h3>Rostliny</h3>
-              <p>Vyberte si ze široké nabídky rostlin z Vašeho okolí</p>
+              <p>Vyberte si ze široké nabídky rostlin z vašeho okolí</p>
             </div>
           </div>
           <div className="home-info-card">
@@ -78,16 +78,16 @@ export const Home = () => {
             <div className="about-text">
               <h2>O portále</h2>
               <p>
-                Portál slouží podnikům k jednoduché propagaci jejich sortimentu. 
-                Pouhým vyplněním formuláře získají stránku s informacemi o jejich podniku.
-                Návštěvníci je pak mohou jednoduše najít včetně sortiemntu.
+                Portál slouží podnikům k jednoduché propagaci sortimentu. 
+                Pouhým vyplněním formuláře získají stránku s informacemi o svém podniku.
+                Návštěvníci je pak mohou jednoduše najít včetně sortimentu.
               </p>
             </div>
             <div className="about-benefits">
               <div className="benefit-item">
                 <h4>Proč se k nám přidat?</h4>
                 <ul>
-                  <li>Seznamte s podnikem lidé ze svého okolí</li>
+                  <li>Seznamte s podnikem lidi ze svého okolí</li>
                   <li>Vytvořte si stránku s podnikem pouze vyplněním formuláře</li>
                   <li>Sdílejte rady a tipy s ostatními</li>
                 </ul>
