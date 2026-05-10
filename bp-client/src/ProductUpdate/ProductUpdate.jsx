@@ -84,10 +84,13 @@ export const ProductUpdate = () => {
                         return { error: true, id: t.id }; 
                     }));
                 const deleteResults = await Promise.all(deletePromises);
-                data.tips = data.tips.filter(newTip => {
-                    const wasDeleted = !deleteResults.some(res => res?.error && res.id === newTip.id);
-                    return wasDeleted;
-                });
+                const failedIds = deleteResults
+                    .filter(res => res?.error)
+                    .map(res => res.id);
+                const failedTexts = initialProductData.tips
+                    .filter(t => failedIds.includes(t.id))
+                    .map(t => t.text);
+                data.tips = data.tips.filter(newTip => !failedTexts.includes(newTip.text));
             }
             if (data.tips && data.tips.length > 0) {
                 const createPromises = data.tips
