@@ -77,7 +77,7 @@ export const BusinessSettings = () => {
         });
         setCategories(categoriesRes.data);
       } catch (err) {
-        console.error("Chyba při načítání dat:", err);
+        //console.error("Chyba při načítání dat:", err);
         navigate("/pristup-odmitnut");
       } finally {
         setLoading(false);
@@ -152,7 +152,7 @@ export const BusinessSettings = () => {
         window.URL.revokeObjectURL(url);
         toast.success("CSV soubor byl úspěšně stažen");
     } catch (error) {
-        console.error("Export error:", error);
+        //console.error("Export error:", error);
         toast.error("Nepodařilo se vygenerovat soubor");
     }
   };

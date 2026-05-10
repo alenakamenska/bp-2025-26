@@ -3,6 +3,7 @@ import axios from "axios";
 import "./warning.css";
 import { GoAlert, GoCheckCircle} from "react-icons/go";
 import Loading from "../Loading/Loading";
+import { toast } from "react-toastify";
 
 export default function Warning() {
   const [coords, setCoords] = useState(null);
@@ -50,7 +51,8 @@ export default function Warning() {
         setWeatherData(data);
         generateAlerts(data);
       } catch (err) {
-        console.error("Chyba API:", err);
+        //console.error("Chyba API:", err);
+        toast.error("Chyba API")
       } finally {
         setLoading(false);
       }

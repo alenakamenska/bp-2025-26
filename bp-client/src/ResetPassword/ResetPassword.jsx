@@ -32,7 +32,7 @@ export const ResetPassword = () => {
             toast.success("Heslo bylo úspěšně změněno. Nyní se můžete přihlásit");
             navigate("/login");
         } catch (error) {
-            console.error("Reset error:", error.response?.data);
+            //console.error("Reset error:", error.response?.data);
             toast.error("Odkaz je neplatný nebo již vypršel");
         } finally {
             setIsSubmitting(false);

@@ -24,7 +24,7 @@ export const AddTip = () => {
                 ]);
                 setCategories(catRes.data);
             } catch (err) {
-                console.error("Chyba při načítání:", err);
+                //console.error("Chyba při načítání:", err);
             }
         };
         loadInitialData();
@@ -59,7 +59,7 @@ export const AddTip = () => {
             toast.success("Rada byla úspěšně uložena");
             navigate("/rady");
         } catch (error) {
-            console.error("Chyba:", error.response?.data || error.message);
+            //console.error("Chyba:", error.response?.data || error.message);
             toast.error(error.response?.data || error.message);
         } finally {
             setIsSubmitting(false);

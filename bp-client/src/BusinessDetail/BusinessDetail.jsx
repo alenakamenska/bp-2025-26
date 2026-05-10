@@ -42,11 +42,11 @@ export const BusinessDetail = () => {
           const opRes = await axios.get(`${API_BASE_URL}/OpeningHours/business/${id}`);
           setOpeningHours(opRes.data);
         } catch (e) {
-          console.warn("Otevírací hodiny se nepodařilo načíst", e);
+          //console.warn("Otevírací hodiny se nepodařilo načíst", e);
           setOpeningHours([]); 
         }
       } catch (err) {
-        console.error("Chyba při načítání dat podniku:", err);
+        //console.error("Chyba při načítání dat podniku:", err);
         setError("Nepodařilo se načíst data podniku");
       } finally {
         setLoading(false);

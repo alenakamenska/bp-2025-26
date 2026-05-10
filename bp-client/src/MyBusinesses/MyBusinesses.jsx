@@ -31,7 +31,8 @@ export const MyBusiness = () => {
                 });
                 setBusinesses(bizRes.data);
             } catch (err) {
-                console.error("Chyba při načítání podniků:", err);
+                //console.error("Chyba při načítání podniků:", err);
+                toast.error("Chyba při načítání")
             } finally {
                 setLoading(false);
             }
@@ -74,7 +75,7 @@ export const MyBusiness = () => {
             toast.success("Podnik byl úspěšně vytvořen");
             navigate("/podniky");
         } catch (error) {
-            console.error("Chyba při ukládání:", error.response?.data || error.message);
+            //console.error("Chyba při ukládání:", error.response?.data || error.message);
             toast.error("Ukládání se nezdařilo.");
         }
     };

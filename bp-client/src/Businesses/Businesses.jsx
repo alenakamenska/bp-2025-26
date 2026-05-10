@@ -30,7 +30,7 @@ export const Business = () => {
             const response = await axios.get(url);
             setCities(response.data);
         } catch (err) {
-            console.error("Chyba při načítání měst:", err);
+            //console.error("Chyba při načítání měst:", err);
         }
     }, [API_BASE_URL]);
 
@@ -42,7 +42,7 @@ export const Business = () => {
             setBusinesses(response.data.items || []);
             setTotalPages(response.data.totalPages || 1);
         } catch (err) {
-            console.error("Chyba při načítání podniků:", err);
+            //console.error("Chyba při načítání podniků:", err);
         } finally {
             setLoading(false);
         }

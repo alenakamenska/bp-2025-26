@@ -6,6 +6,7 @@ import { Button } from "../Button/Button";
 import { FileInput } from "../FileInput/FileInput"; 
 import "./BusinessForm.css";
 import { AddColleague } from "../AddColeague/AddColleague";
+import { toast } from "react-toastify";
 
 export const BusinessForm = ({ onSubmit, accessToken, initialData = null }) => {
     const API_BASE_URL = process.env.REACT_APP_API_URL;
@@ -57,7 +58,8 @@ export const BusinessForm = ({ onSubmit, accessToken, initialData = null }) => {
                     setValue("isVerified", res.data.isVerified);
                 }
             } catch (err) { 
-                console.warn("ARES error", err); 
+                //console.warn("ARES error", err); 
+                toast.error("ARES chyba")
             }
         }
     };

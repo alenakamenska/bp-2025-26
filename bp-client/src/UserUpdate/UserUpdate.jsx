@@ -35,7 +35,8 @@ export const UserUpdate = () => {
                 });
                 setLoading(false);
             } catch (err) {
-                console.error("Chyba při načítání uživatele:", err);
+                //console.error("Chyba při načítání uživatele:", err);
+                toast.error("Chyba při načítání uživatele")
                 setLoading(false);
             }
         };
@@ -61,7 +62,7 @@ export const UserUpdate = () => {
             }
         } catch (err) {
             setServerError("Aktualizace se nezdařila");
-            console.error(err);
+            //console.error(err);
             toast.error("Nepodařilo se uložit změny");
         }
     };

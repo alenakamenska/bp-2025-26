@@ -39,7 +39,8 @@ export const EditTip = () => {
                     productId: tipRes.data.productId
                 });
             } catch (err) {
-                console.error("Chyba při načítání:", err);
+                //console.error("Chyba při načítání:", err);
+                toast.error("Chyba při načítání")
             }
         };
         loadInitialData();
@@ -78,7 +79,7 @@ export const EditTip = () => {
             toast.success("rada byla úspěšně aktualizována")
             navigate(-1);
         } catch (error) {
-            console.error("Chyba:", error.response?.data || error.message);
+            //console.error("Chyba:", error.response?.data || error.message);
             toast.error(error.response?.data || error.message)
         } finally {
             setIsSubmitting(false);

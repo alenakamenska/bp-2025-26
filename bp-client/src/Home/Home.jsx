@@ -9,6 +9,7 @@ import Warning from "../components/Warning/warning";
 import axios from "axios";
 import EmptyState from "../components/EmptyState/EmptyState";
 import Loading from "../components/Loading/Loading";
+import { toast } from "react-toastify";
 
 export const Home = () => {
   const [businesses, setBusinesses] = useState([]);
@@ -27,7 +28,8 @@ export const Home = () => {
         setBusinesses(businessesRes.data.items || businessesRes.data);
         setProducts(productsRes.data.items || productsRes.data);
       } catch (err) {
-        console.error("Chyba při hromadném načítání dat:", err);
+        //console.error("Chyba při hromadném načítání dat:", err);
+        toast.error("Chyba při načítání")
       } finally {
         setLoading(false);
       }

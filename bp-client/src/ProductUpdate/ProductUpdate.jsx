@@ -48,7 +48,7 @@ export const ProductUpdate = () => {
                     : [{ nameTip: "", text: "" }] 
                 });
             } catch (err) {
-                console.error("Chyba při načítání dat:", err);
+                //console.error("Chyba při načítání dat:", err);
                 toast.error("Nepodařilo se načíst data produktu");
             } finally {
                 setLoading(false);
@@ -110,7 +110,7 @@ export const ProductUpdate = () => {
             navigate(-1);
             return true;
         } catch (error) {
-            console.error("Chyba při aktualizaci:", error);
+            //console.error("Chyba při aktualizaci:", error);
             let msg = "Při aktualizaci došlo k chybě";
             if (error.response?.data) {
                 msg = error.response.data.title || error.response.data.message || JSON.stringify(error.response.data);

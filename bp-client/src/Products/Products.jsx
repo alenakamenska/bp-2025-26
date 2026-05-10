@@ -7,6 +7,7 @@ import { Select } from "../components/Select/Select";
 import { Button } from "../components/Button/Button";
 import EmptyState from "../components/EmptyState/EmptyState";
 import Loading from "../components/Loading/Loading";
+import { toast } from "react-toastify";
 
 export const Products = () => {
     const [products, setProducts] = useState([]);
@@ -45,7 +46,8 @@ export const Products = () => {
             setProducts(response.data.items || []);
             setTotalPages(response.data.totalPages || 1);
         } catch (err) {
-            console.error("Chyba při komunikaci s API:", err);
+            //console.error("Chyba při komunikaci s API:", err);
+            toast.error("Chyba")
         } finally {
             setLoading(false);
         }

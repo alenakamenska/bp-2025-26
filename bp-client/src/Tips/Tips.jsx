@@ -44,7 +44,7 @@ export const Tips = () => {
         setTips(response.data.items || []); 
         setTotalPages(response.data.totalPages || 1);
       } catch (err) {
-        console.error("Chyba při načítání rad:", err);
+        //console.error("Chyba při načítání rad:", err);
         setError("Nepodařilo se načíst rady");
       } finally {
         setLoading(false);

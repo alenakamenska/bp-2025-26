@@ -22,7 +22,7 @@ export const ForgotPassword = () => {
             toast.success("Pokud je e-mail v naší databázi, odeslali jsme instrukce pro obnovu hesla");
             setTimeout(() => navigate("/login"), 3500);
         } catch (error) {
-            console.error("Chyba při odesílání požadavku:", error);
+            //console.error("Chyba při odesílání požadavku:", error);
             toast.error("Něco se nepovedlo. Zkuste to prosím znovu");
         } finally {
             setIsSubmitting(false);

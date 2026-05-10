@@ -21,7 +21,7 @@ export const TipDetail = () => {
         const response = await axios.get(`${API_BASE_URL}/Tips/${id}`);
         setTip(response.data);
       } catch (err) {
-        console.error("Chyba při načítání detailu rady:", err);
+        //console.error("Chyba při načítání detailu rady:", err);
         setError("Nepodařilo se načíst detail rady");
       } finally {
         setLoading(false);

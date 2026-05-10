@@ -40,7 +40,8 @@ export const AddColleague = ({ businessId, accessToken, ownerId }) => {
             });
             setColleagues(res.data);
         } catch (err) {
-            console.error("Chyba při načítání kolegů", err);
+            //console.error("Chyba při načítání kolegů", err);
+            toast.error("Chyba při načítání kolegů")
         }
     }, [businessId, accessToken, API_BASE_URL]);
 

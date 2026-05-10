@@ -31,7 +31,7 @@ export const ProductDetail = () => {
         setProduct(prodRes.data);
         setBusiness(bizRes.data);
       } catch (err) {
-        console.error("Chyba při načítání:", err);
+        //console.error("Chyba při načítání:", err);
         setError("Nepodařilo se načíst data o produktu nebo prodejci");
       } finally {
         setLoading(false);

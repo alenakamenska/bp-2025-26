@@ -75,7 +75,7 @@ export const Login = () => {
         } else {
             setServerErrors([{ description: "Server neodpovídá" }]);
         }
-        console.error("API Error:", error.response?.data || error.message);
+        //console.error("API Error:", error.response?.data || error.message);
     };
 
     return (
