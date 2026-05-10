@@ -160,17 +160,32 @@ namespace bp_api.Controllers
         {
             var currentUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
 
-            var tips = await _context.Tips.FindAsync(id);
-            if (tips == null)
+            var tip = await _context.Tips
+                .Include(t => t.Product)
+                    .ThenInclude(p => p.Business)
+                        .ThenInclude(b => b.Users)
+                .FirstOrDefaultAsync(t => t.Id == id);
+
+            if (tip == null) return NotFound();
+
+            if (tip.ProductId == null || tip.Product?.Business == null)
             {
-                return NotFound();
+                if (tip.UserId != currentUserId)
+                {
+                    return StatusCode(403, "Tato rada nemá vazbu na produkt. Smazat ji může pouze autor");
+                }
             }
-            if(!tips.UserId.Equals(currentUserId))
+            else
             {
-                return StatusCode(403, "Nelze smazat radu, která není Vaše");
+                bool isTeamMember = tip.Product.Business.Users.Any(u => u.Id == currentUserId);
+
+                if (!isTeamMember && tip.UserId != currentUserId && !User.IsInRole("Admin"))
+                {
+                    return StatusCode(403, "Nejste členem týmu tohoto obchodu");
+                }
             }
 
-            _context.Tips.Remove(tips);
+            _context.Tips.Remove(tip);
             await _context.SaveChangesAsync();
 
             return NoContent();

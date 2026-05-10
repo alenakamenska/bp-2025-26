@@ -39,7 +39,7 @@ export const ProductUpdate = () => {
                     categoryId: productRes.data.categoryId,
                     businessId: productRes.data.businessId,
                     tips: tipsRes.data.length > 0 
-                    ? tipsRes.data.map(t => ({ nameTip: t.name, text: t.info, id: t.id || t.Id })) 
+                    ? tipsRes.data.map(t => ({ nameTip: t.name, text: t.info, id: t.id })) 
                     : [{ nameTip: "", text: "" }] 
                 });
             } catch (err) {
@@ -79,18 +79,8 @@ export const ProductUpdate = () => {
                     .filter(t => t.id)
                     .map(t => axios.delete(`${API_BASE_URL}/Tips/${t.id}`, {
                         headers: { Authorization: `Bearer ${state.accessToken}` }
-                    }).catch(err => {
-                        console.warn(`Nepodařilo se smazat radu ${t.id}:`, err.response?.status);
-                        return { error: true, id: t.id }; 
-                    }));
-                const deleteResults = await Promise.all(deletePromises);
-                const failedIds = deleteResults
-                    .filter(res => res?.error)
-                    .map(res => res.id);
-                const failedTexts = initialProductData.tips
-                    .filter(t => failedIds.includes(t.id))
-                    .map(t => t.text);
-                data.tips = data.tips.filter(newTip => !failedTexts.includes(newTip.text));
+                    }).catch(() => null));
+                await Promise.all(deletePromises);
             }
             if (data.tips && data.tips.length > 0) {
                 const createPromises = data.tips
