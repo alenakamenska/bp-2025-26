@@ -153,6 +153,34 @@ namespace bp_api.Controllers
             return CreatedAtAction("GetTips", new { id = tip.Id }, tip);
         }
 
+        // POST: api/TipsP
+        [HttpPost("TipsP")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<ActionResult<Tips>> PostTipsP([FromBody] TipUpdateDTO dto)
+        {
+            var currentUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(currentUserId))
+            {
+                return Unauthorized("Uživatel není přihlášen");
+            }
+
+            var tip = new Tips
+            {
+                Name = dto.Name,
+                Info = dto.Info,
+                ProductId = dto.ProductId,
+                UserId = string.IsNullOrEmpty(dto.UserId) ? currentUserId : dto.UserId,
+                CategoryId = dto.CategoryId,
+            };
+
+            _context.Tips.Add(tip);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetTips", new { id = tip.Id }, tip);
+        }
+
+
         // DELETE: api/Tips/5
         [HttpDelete("{id}")]
         [Authorize]

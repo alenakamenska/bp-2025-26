@@ -39,11 +39,17 @@ export const ProductUpdate = () => {
                     categoryId: productRes.data.categoryId,
                     businessId: productRes.data.businessId,
                     tips: tipsRes.data.length > 0 
-                    ? tipsRes.data.map(t => ({ nameTip: t.name, text: t.info, id: t.id })) 
+                    ? tipsRes.data.map(t => ({ 
+                        nameTip: t.name, 
+                        text: t.info, 
+                        id: t.id,
+                        userId: t.userId 
+                      })) 
                     : [{ nameTip: "", text: "" }] 
                 });
             } catch (err) {
                 console.error("Chyba při načítání dat:", err);
+                toast.error("Nepodařilo se načíst data produktu");
             } finally {
                 setLoading(false);
             }
@@ -86,13 +92,15 @@ export const ProductUpdate = () => {
                 const createPromises = data.tips
                     .filter(t => t.text || t.nameTip)
                     .map(t => {
+                        const originalTip = initialProductData.tips.find(it => it.id === t.id);
                         const tipPayload = {
                             Name: t.nameTip,
                             Info: t.text,
                             ProductId: Number(id),
-                            CategoryId: Number(catId)
+                            CategoryId: Number(catId),
+                            UserId: originalTip ? originalTip.userId : null 
                         };
-                        return axios.post(`${API_BASE_URL}/Tips`, tipPayload, {
+                        return axios.post(`${API_BASE_URL}/Tips/TipsP`, tipPayload, {
                             headers: { Authorization: `Bearer ${state.accessToken}` }
                         });
                     });
@@ -103,7 +111,13 @@ export const ProductUpdate = () => {
             return true;
         } catch (error) {
             console.error("Chyba při aktualizaci:", error);
-            setServerErrors([error.response?.data || error.message]);
+            let msg = "Při aktualizaci došlo k chybě";
+            if (error.response?.data) {
+                msg = error.response.data.title || error.response.data.message || JSON.stringify(error.response.data);
+            } else {
+                msg = error.message;
+            }
+            setServerErrors([typeof msg === 'object' ? "Chyba dat (400 Bad Request)" : msg]);
             return false;
         }
     };
